@@ -165,9 +165,10 @@ export default function BoilerplatesShow(props) {
         <Card style={{ backgroundColor: "#09191b", color: "#fefefe" }}>
           <Card.Body>
             <BoilerplateEditForm
-              title={boilerplate.title}
-              quillText={quillText}
-              categoryId={boilerplate.category_id}
+              boilerplate={boilerplate}
+              // title={boilerplate.title}
+              // quillText={quillText}
+              // categoryId={boilerplate.category_id}
               categories={categories}
               onSubmit={handleSubmit}
               onCancel={handleCancel}

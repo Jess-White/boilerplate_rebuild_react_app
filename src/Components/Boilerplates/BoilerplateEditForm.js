@@ -39,9 +39,11 @@ const formats = [
 
 export default function BoilerplateEditForm(props) {
   const { categories, onSubmit, onCancel } = props;
-  const [newTitle, setNewTitle] = useState(props.title);
-  const [newQuillText, setNewQuillText] = useState(props.quillText);
-  const [newCategoryId, setNewCategoryId] = useState(props.categoryId);
+  const [newTitle, setNewTitle] = useState(props.boilerplate.title);
+  const [newQuillText, setNewQuillText] = useState(props.boilerplate.quillText);
+  const [newCategoryId, setNewCategoryId] = useState(
+    props.boilerplate.categoryId
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
