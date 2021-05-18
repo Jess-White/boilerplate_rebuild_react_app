@@ -146,7 +146,7 @@ export default function CategoriesShow(props) {
         <Card>
           <Card.Body>
             <CategoryEditForm
-              name={category.name}
+              category={category}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
             />

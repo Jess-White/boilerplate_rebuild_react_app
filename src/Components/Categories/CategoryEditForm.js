@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 
 export default function CategoriesShowForm(props) {
   const { categories, onSubmit, onCancel } = props;
-  const [newName, setNewName] = useState(props.name);
+  const [newName, setNewName] = useState(props.category.name);
 
   const handleSubmit = (event) => {
     event.preventDefault();
