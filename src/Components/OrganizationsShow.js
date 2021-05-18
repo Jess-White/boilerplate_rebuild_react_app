@@ -16,6 +16,7 @@ library.add(faTrashAlt);
 library.add(faEdit);
 
 export default function OrganizationsShow(props) {
+  const [organization, setOrganization] = useState({});
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [isHidden, setIsHidden] = useState(true);

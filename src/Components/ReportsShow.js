@@ -29,9 +29,9 @@ export default function ReportsShow(props) {
   console.log("reports Show component rendered");
   const [id, setId] = useState(props.match.params.report_id);
   const [grantId, setGrantId] = useState(props.match.params.grant_id);
-  const [title, setTitle] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [submitted, setSubmitted] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [deadline, setDeadline] = useState("");
+  // const [submitted, setSubmitted] = useState("");
   const [bios, setBios] = useState([]);
   const [boilerplates, setBoilerplates] = useState([]);
   const [isHidden, setIsHidden] = useState(true);
@@ -69,11 +69,12 @@ export default function ReportsShow(props) {
       const reportId = id;
       getGrantReport(organizationClient, grantId, reportId)
         .then((report) => {
-          setId(report.id);
-          setGrantId(report.grant_id);
-          setTitle(report.title);
-          setDeadline(report.deadline);
-          setSubmitted(report.submitted);
+          setReportSections(report));
+          // setId(report.id);
+          // setGrantId(report.grant_id);
+          // setTitle(report.title);
+          // setDeadline(report.deadline);
+          // setSubmitted(report.submitted);
           setReportSections(report.report_sections);
           setGrantSections(report.grant.grant_sections);
           setLoading(false);
@@ -213,11 +214,11 @@ export default function ReportsShow(props) {
       <h1>Report Show - Build Draft Report Sections</h1>
       <Card>
         <Card.Header>
-          <h2>{title}</h2>
+          <h2>{report.title}</h2>
         </Card.Header>
         <Card.Body>
-          <h3>Deadline: {deadline}</h3>
-          <h3>Submitted: {submitted ? "yes" : "not yet"}</h3>
+          <h3>Deadline: {report.deadline}</h3>
+          <h3>Submitted: {report.submitted ? "yes" : "not yet"}</h3>
         </Card.Body>
       </Card>
 
@@ -246,9 +247,9 @@ export default function ReportsShow(props) {
           <Card>
             <Card.Body>
               <ReportEditForm
-                title={title}
-                deadline={deadline}
-                submitted={submitted}
+                title={report.title}
+                deadline={report.deadline}
+                submitted={report.submitted}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
               />
@@ -260,7 +261,7 @@ export default function ReportsShow(props) {
       {/* New report section */}
 
       <ReportSectionsNew
-        report_id={id}
+        report_id={report.id}
         grant_id={props.grant_id}
         sort_number={reportSections.length}
         updateReportSections={updateReportSections}
