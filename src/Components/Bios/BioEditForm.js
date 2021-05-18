@@ -35,10 +35,10 @@ const formats = [
 
 export default function BioEditForm(props) {
   const { onSubmit, onCancel } = props;
-  const [newQuillText, setNewQuillText] = useState(props.quillText);
-  const [newFirstName, setNewFirstName] = useState(props.firstName);
-  const [newLastName, setNewLastName] = useState(props.lastName);
-  const [newTitle, setNewTitle] = useState(props.title);
+  const [newQuillText, setNewQuillText] = useState(props.bio.quillText);
+  const [newFirstName, setNewFirstName] = useState(props.bio.firstName);
+  const [newLastName, setNewLastName] = useState(props.bio.lastName);
+  const [newTitle, setNewTitle] = useState(props.bio.title);
 
   const handleSubmit = (event) => {
     event.preventDefault();

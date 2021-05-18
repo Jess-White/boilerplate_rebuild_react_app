@@ -211,10 +211,11 @@ export default function BiosShow(props) {
           <Card style={{ backgroundColor: "#09191b", color: "#fefefe" }}>
             <Card.Body>
               <BioEditForm
-                title={bio.title}
-                quillText={quillText}
-                firstName={bio.first_name}
-                lastName={bio.last_name}
+                bio={bio}
+                // title={bio.title}
+                // quillText={quillText}
+                // firstName={bio.first_name}
+                // lastName={bio.last_name}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
               />

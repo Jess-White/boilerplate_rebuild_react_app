@@ -18,19 +18,16 @@ import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesServic
 
 export default function GrantsFinalizeShow(props) {
   const [grant, setGrant] = useState("");
-  const [id, setId] = useState("");
-  const [title, setTitle] = useState("");
-  const [rfpUrl, setRfpUrl] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [successful, setSuccessful] = useState(false);
-  const [purpose, setPurpose] = useState("");
-  const [organizationId, setOrganizationId] = useState("");
-  const [organizationName, setOrganizationName] = useState("");
-  const [fundingOrgId, setFundingOrgId] = useState("");
-  const [sections, setSections] = useState([]);
-  const [reports, setReports] = useState([]);
-  const [fundingOrgs, setFundingOrgs] = useState([]);
+  // const [id, setId] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [rfpUrl, setRfpUrl] = useState("");
+  // const [deadline, setDeadline] = useState("");
+  // const [submitted, setSubmitted] = useState(false);
+  // const [successful, setSuccessful] = useState(false);
+  // const [purpose, setPurpose] = useState("");
+  // const [fundingOrgId, setFundingOrgId] = useState("");
+  // const [sections, setSections] = useState([]);
+  // const [reports, setReports] = useState([]);
   const [isHidden, setIsHidden] = useState(true);
   const [isCopyGrantHidden, setIsCopyGrantHidden] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -71,18 +68,18 @@ export default function GrantsFinalizeShow(props) {
       getGrant(organizationClient, grantId).then((grant) => {
         const zippySections = createUnzipped(grant.sections);
         setGrant(grant);
-        setId(grant.id);
-        setTitle(grant.title);
-        setRfpUrl(grant.rfp_url);
-        setDeadline(grant.deadline);
-        setSubmitted(grant.submitted);
-        setSuccessful(grant.successful);
-        setPurpose(grant.purpose);
-        setOrganizationId(grant.organizion_id);
-        setOrganizationName(grant.organization_name);
-        setFundingOrgId(grant.funding_org_id);
+        // setId(grant.id);
+        // setTitle(grant.title);
+        // setRfpUrl(grant.rfp_url);
+        // setDeadline(grant.deadline);
+        // setSubmitted(grant.submitted);
+        // setSuccessful(grant.successful);
+        // setPurpose(grant.purpose);
+        // setOrganizationId(grant.organizion_id);
+        // setOrganizationName(grant.organization_name);
+        // setFundingOrgId(grant.funding_org_id);
         setSections(zippySections);
-        setReports(grant.reports);
+        // setReports(grant.reports);
         setLoading(false);
         setNewTitle(grant.title);
         setNewRfpUrl(grant.rfp_url);
@@ -143,7 +140,7 @@ export default function GrantsFinalizeShow(props) {
     newSuccessful,
     newPurpose,
   }) => {
-    updateGrant(organizationClient, id, {
+    updateGrant(organizationClient, grant.id, {
       title: newTitle,
       rfp_url: newRfpUrl,
       deadline: newDeadline,
@@ -177,13 +174,12 @@ export default function GrantsFinalizeShow(props) {
     event.preventDefault();
     if (currentOrganizationId) {
       createGrant(organizationClient, {
-        original_grant_id: id,
+        original_grant_id: grant.id,
         title: copyTitle,
         rfp_url: copyRfpUrl,
         deadline: copyDeadline,
       })
         .then((grant) => {
-          console.log(grant.id);
           setCopiedGrantId(grant.id);
           setShowCopyModal(true);
           setSuccessfulCopy(true);
@@ -233,8 +229,8 @@ export default function GrantsFinalizeShow(props) {
   const Header = (
     <Card.Header>
       <h3>Grants Finalize Page - View Grant Draft, Make Final Edits</h3>
-      <h3>{title}</h3>
-      <h3>{purpose}</h3>
+      <h3>{grant.title}</h3>
+      <h3>{grant.purpose}</h3>
     </Card.Header>
   );
 
@@ -255,12 +251,12 @@ export default function GrantsFinalizeShow(props) {
             <div>
               <GrantFinalizeEditForm
                 grant={grant}
-                title={title}
-                rfpUrl={rfpUrl}
-                deadline={deadline}
-                submitted={submitted}
-                successful={successful}
-                purpose={purpose}
+                // title={grant.title}
+                // rfpUrl={grant.rfpUrl}
+                // deadline={grant.deadline}
+                // submitted={grant.submitted}
+                // successful={successful}
+                // purpose={purpose}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
               />
@@ -348,7 +344,7 @@ export default function GrantsFinalizeShow(props) {
                 isUnzipped={section.isUnzipped}
                 toggleUnzipped={toggleUnzipped}
                 section_id={section.id}
-                grant_id={id}
+                grant_id={grant.id}
                 boilerplates={boilerplates}
                 bios={bios}
                 updateSections={updateSections}
