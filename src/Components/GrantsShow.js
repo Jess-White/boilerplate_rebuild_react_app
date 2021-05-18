@@ -28,15 +28,16 @@ library.add(faTrashAlt);
 library.add(faEdit);
 
 export default function GrantsShow(props) {
-  const [id, setId] = useState("");
-  const [title, setTitle] = useState("");
-  const [rfpUrl, setRfpUrl] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [successful, setSuccessful] = useState(false);
-  const [purpose, setPurpose] = useState("");
-  const [organizationId, setOrganizationId] = useState("");
-  const [fundingOrgId, setFundingOrgId] = useState("");
+  const [grant, setGrant] = useState({});
+  // const [id, setId] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [rfpUrl, setRfpUrl] = useState("");
+  // const [deadline, setDeadline] = useState("");
+  // const [submitted, setSubmitted] = useState(false);
+  // const [successful, setSuccessful] = useState(false);
+  // const [purpose, setPurpose] = useState("");
+  // const [organizationId, setOrganizationId] = useState("");
+  // const [fundingOrgId, setFundingOrgId] = useState("");
   const [isHidden, setIsHidden] = useState(true);
   const [sections, setSections] = useState([]);
   const [reports, setReports] = useState([]);
