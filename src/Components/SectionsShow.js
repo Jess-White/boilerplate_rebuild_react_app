@@ -26,9 +26,8 @@ library.add(faTrashAlt);
 library.add(faEdit);
 
 export default function SectionsShow(props) {
+  const [section, setSection] = useState({});
   const [quillText, setQuillText] = useState("");
-  const [title, setTitle] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
   const [isHidden, setIsHidden] = useState(true);
   const [isBoilerplateHidden, setIsBoilerplateHidden] = useState(true);
   const [isUnzipped, setIsUnzipped] = useState(false);
@@ -61,11 +60,12 @@ export default function SectionsShow(props) {
       const sectionId = props.section_id;
       getGrantSection(organizationClient, grantId, sectionId).then(
         (section) => {
-          setTitle(section.title);
+          setSection(section);
+          // setTitle(section.title);
           setQuillText(section.text);
-          setWordcount(section.wordcount);
-          setSortOrder(section.sort_order);
-          setGrantId(section.grant_id);
+          // setWordcount(section.wordcount);
+          // setSortOrder(section.sort_order);
+          // setGrantId(section.grant_id);
           setNewQuillText(section.text);
           setNewTitle(section.title);
           setNewSortOrder(section.sort_order);
@@ -154,7 +154,7 @@ export default function SectionsShow(props) {
       {isUnzipped === false ? (
         <Card>
           <Card.Body>
-            <h5>{title}</h5>
+            <h5>{section.title}</h5>
             <h1 onClick={toggleUnzipped}>+</h1>
             <FontAwesomeIcon
               icon={faEdit}
@@ -169,7 +169,7 @@ export default function SectionsShow(props) {
       ) : (
         <Card>
           <Card.Body>
-            <h5>{title}</h5>
+            <h5>{section.title}</h5>
             <h1 onClick={toggleUnzipped}>-</h1>
             <FontAwesomeIcon
               icon={faEdit}
@@ -194,8 +194,8 @@ export default function SectionsShow(props) {
               <SectionToBoilerplateNew
                 toggleBoilerplateHidden={toggleBoilerplateHidden}
                 organization_id={props.organization_id}
-                title={title}
-                text={quillText}
+                title={section.title}
+                text={section.quillText}
               />
             ) : null}
 
@@ -209,8 +209,8 @@ export default function SectionsShow(props) {
           <Card>
             <Card.Body>
               <SectionEditForm
-                title={title}
-                quillText={quillText}
+                title={section.title}
+                quillText={section.quillText}
                 boilerplates={boilerplates}
                 bios={bios}
                 onSubmit={handleSubmit}

@@ -261,7 +261,7 @@ export default function ReportsShow(props) {
       {/* New report section */}
 
       <ReportSectionsNew
-        report_id={report.id}
+        report_id={id}
         grant_id={props.grant_id}
         sort_number={reportSections.length}
         updateReportSections={updateReportSections}
