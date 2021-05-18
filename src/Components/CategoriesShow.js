@@ -24,11 +24,12 @@ library.add(faTrashAlt);
 library.add(faEdit);
 
 export default function CategoriesShow(props) {
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [organizationId, setOrganizationId] = useState("");
+  // const [id, setId] = useState("");
+  // const [name, setName] = useState("");
+  const [category, setCategory] = useState({}});
+  // const [organizationId, setOrganizationId] = useState("");
+  // const [organizationName, setOrganizationName] = useState("");
   const [isHidden, setIsHidden] = useState(true);
-  const [organizationName, setOrganizationName] = useState("");
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
   const history = useHistory();
@@ -52,10 +53,11 @@ export default function CategoriesShow(props) {
       const CategoryId = props.match.params.category_id;
       getCategory(organizationClient, CategoryId)
         .then((category) => {
-          setId(category.id);
-          setName(category.name);
-          setOrganizationId(category.organization_id);
-          setOrganizationName(category.organization.name);
+          setCategory(category)
+          // setId(category.id);
+          // setName(category.name);
+          // setOrganizationId(category.organization_id);
+          // setOrganizationName(category.organization.name);
           setNewName(category.name);
           setLoading(false);
         })
@@ -72,7 +74,7 @@ export default function CategoriesShow(props) {
   const handleSubmit = ({ newName }) => {
     updateCategory(organizationClient, id, {
       name: newName,
-      organization_id: organizationId,
+      organization_id: category.organization_id,
     })
       .then((category) => {
         setName(category.name);
@@ -114,7 +116,7 @@ export default function CategoriesShow(props) {
           display: "inline",
         }}
       >
-        Name: {name}
+        Name: {category.name}
       </h3>
       <FontAwesomeIcon
         icon={faEdit}
@@ -144,7 +146,7 @@ export default function CategoriesShow(props) {
         <Card>
           <Card.Body>
             <CategoryEditForm
-              name={name}
+              name={category.name}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
             />

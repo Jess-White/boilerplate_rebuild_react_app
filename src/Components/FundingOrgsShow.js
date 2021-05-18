@@ -24,11 +24,7 @@ library.add(faTrashAlt);
 library.add(faEdit);
 
 export default function FundingOrgsShow(props) {
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [website, setWebsite] = useState("");
-  const [organizationId, setOrganizationId] = useState("");
-  const [organizationName, setOrganizationName] = useState("");
+  const [fundingOrg, setFundingOrg] = useState({});
   const [isHidden, setIsHidden] = useState(true);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
@@ -54,12 +50,8 @@ export default function FundingOrgsShow(props) {
     const fundingOrgId = props.match.params.funding_org_id;
     if (currentOrganizationId) {
       getFundingOrg(organizationClient, fundingOrgId)
-        .then((fundingOrg) => {
-          setId(fundingOrg.id);
-          setName(fundingOrg.name);
-          setWebsite(fundingOrg.website);
-          setOrganizationId(fundingOrg.organization_id);
-          setOrganizationName(fundingOrg.organization.name);
+        .then((funding_org) => {
+          setFundingOrg(funding_org);
           setNewName(fundingOrg.name);
           setNewWebsite(fundingOrg.website);
           setLoading(false);
@@ -78,11 +70,9 @@ export default function FundingOrgsShow(props) {
     updateFundingOrg(organizationClient, id, {
       name: newName,
       website: newWebsite,
-      organization_id: organizationId,
     })
       .then((fundingOrg) => {
         handleClose();
-        updateOrganizationName(fundingOrg.organization.name);
         setNewName(fundingOrg.name);
         setNewWebsite(fundingOrg.website);
         toggleHidden();
@@ -113,10 +103,6 @@ export default function FundingOrgsShow(props) {
     }
   };
 
-  const updateOrganizationName = (organizationName) => {
-    setOrganizationName(organizationName);
-  };
-
   if (loading) {
     return (
       <div className="container">
@@ -134,7 +120,7 @@ export default function FundingOrgsShow(props) {
           display: "inline",
         }}
       >
-        Name: {name}
+        Name: {fundingOrg.name}
       </h3>
       <FontAwesomeIcon
         icon={faEdit}
@@ -162,8 +148,7 @@ export default function FundingOrgsShow(props) {
       <Card>
         {Header}
         <Card.Body>
-          <h3>Website: {website}</h3>
-          <h3>Organization Name: {organizationName}</h3>
+          <h3>Website: {fundingOrg.website}</h3>
         </Card.Body>
       </Card>
       <br />
@@ -172,8 +157,8 @@ export default function FundingOrgsShow(props) {
           <Card>
             <Card.Body>
               <FundingOrgEditForm
-                name={name}
-                website={website}
+                name={fundingOrg.name}
+                website={fundingOrg.website}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
               />
