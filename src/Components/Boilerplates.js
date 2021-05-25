@@ -1,39 +1,46 @@
-import React, { Component, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import BoilerplatesNew from "./BoilerplatesNew";
-import Card from "react-bootstrap/Card";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Modal from "./Elements/Modal";
+import { Link } from "react-router-dom";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
 import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
+import BoilerplatesTable from "./Boilerplates/BoilerplatesTable";
+import unique from "../Helpers/unique";
+
+const NO_SELECTED_CATEGORY = "none";
 
 export default function Boilerplates(props) {
   const [loading, setLoading] = useState(true);
   const [boilerplates, setBoilerplates] = useState([]);
-  const [filteredBoilerplates, setFilteredBoilerplates] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [filterParam, setFilterParam] = useState("");
-  const [sortParam, setSortParam] = useState("");
-  const {
-    currentOrganizationStore,
-    currentOrganizationDispatch,
-    organizationClient,
-  } = useCurrentOrganizationContext();
+  const [selectedCategory, setSelectedCategory] =
+    useState(NO_SELECTED_CATEGORY);
+  const [selectedMaxWordCount, setSelectedMaxWordCount] = useState("");
+  const { currentOrganizationStore, organizationClient } =
+    useCurrentOrganizationContext();
   const currentOrganizationId =
-    currentOrganizationStore.currentOrganization &&
-    currentOrganizationStore.currentOrganization.id;
+    currentOrganizationStore.currentOrganization?.id;
 
-  const [show, setShow] = useState(false);
-  const handleClose = (event) => setShow(false);
-  const handleShow = (event) => setShow(true);
+  const handleChangeSelectedCategory = (event) =>
+    setSelectedCategory(event.target.value);
+  const handleChangeSelectedMaxWordCount = (event) =>
+    setSelectedMaxWordCount(event.target.value);
+
+  const markedBoilerplates = boilerplates.map((boilerplate) => {
+    const maxWordCount = Number.parseInt(selectedMaxWordCount);
+    const markedOnCategory =
+      boilerplate.category_name.includes(selectedCategory) &&
+      selectedCategory !== NO_SELECTED_CATEGORY;
+    const markedOnMaxWordCount =
+      boilerplate.wordcount <= maxWordCount && Number.isFinite(maxWordCount);
+
+    return { ...boilerplate, markedOnCategory, markedOnMaxWordCount };
+  });
 
   useEffect(() => {
     if (currentOrganizationId) {
       getAllBoilerplates(organizationClient)
         .then((boilerplates) => {
           setBoilerplates(boilerplates);
-          setFilteredBoilerplates(boilerplates);
           setLoading(false);
         })
         .catch((error) => {
@@ -41,177 +48,50 @@ export default function Boilerplates(props) {
           setLoading(false);
         });
     }
-  }, [currentOrganizationId]);
-
-  const updateBoilerplates = (newBoilerplate) => {
-    const newBoilerplates = [...boilerplates, newBoilerplate];
-    setFilteredBoilerplates(newBoilerplates);
-  };
-
-  useEffect(() => {}, [filteredBoilerplates]);
-
-  const handleSearchParamSelect = (event) => {
-    setFilterParam(event.target.value);
-  };
-
-  const handleSortParamSelect = (event) => {
-    setSortParam(event.target.value);
-  };
-
-  const sortBoilerplates = (sortParam) => {
-    const filteredBoilerplatesClone = [...filteredBoilerplates];
-    filteredBoilerplatesClone.sort(function (a, b) {
-      return a[sortParam].localeCompare(b[sortParam]);
-    });
-    setFilteredBoilerplates(filteredBoilerplatesClone);
-  };
-
-  useEffect(() => {
-    sortBoilerplates(sortParam);
-  }, [sortParam]);
-
-  const handleChange = (event) => {
-    const searchValue = event.target.value.toLowerCase();
-    setSearchText(event.target.value);
-    if (searchValue.length <= 0) {
-      setFilteredBoilerplates(boilerplates);
-      return;
-    }
-    if (filterParam === "filterWordCount") {
-      let filteredByWordCount = [];
-      filteredByWordCount = boilerplates.filter(
-        (boilerplate) => boilerplate.wordcount < searchValue
-      );
-      setFilteredBoilerplates(filteredByWordCount);
-    } else if (filterParam === "filterTitle") {
-      let filteredByTitle = [];
-      filteredByTitle = boilerplates.filter((boilerplate) => {
-        return boilerplate.title.toLowerCase().indexOf(searchValue) !== -1;
-      });
-      setFilteredBoilerplates(filteredByTitle);
-    } else if (filterParam === "filterText") {
-      let filteredByText = [];
-      filteredByText = boilerplates.filter((boilerplate) => {
-        return boilerplate.text.toLowerCase().indexOf(searchValue) !== -1;
-      });
-    }
-  };
+  }, [organizationClient, currentOrganizationId]);
 
   if (loading) {
     return <h1 className="container">Loading....</h1>;
   }
 
-  let highlightedBoilerplates = filteredBoilerplates.map((boilerplate) => {
-    let resultsText = boilerplate.text.replace(
-      new RegExp(searchText, "gi"),
-      (match) => `<mark>${match}</mark>`
-    );
-    let resultsTitle = boilerplate.title.replace(
-      new RegExp(searchText, "gi"),
-      (match) => `<mark>${match}</mark>`
-    );
-    if (searchText) {
-      return (
-        <div key={boilerplate.id}>
-          <Card>
-            <h5>
-              <a
-                href={`/organizations/${currentOrganizationId}/boilerplates/${boilerplate.id}`}
-                dangerouslySetInnerHTML={{ __html: resultsTitle }}
-              ></a>
-            </h5>
-            <Card.Body>
-              <h5 dangerouslySetInnerHTML={{ __html: resultsText }}></h5>
-              <h5>Organization: {boilerplate.organization_name}</h5>
-              <h5>Category: {boilerplate.category_name}</h5>
-              <h5>Wordcount: {boilerplate.wordcount}</h5>
-            </Card.Body>
-          </Card>
-          <br />
-        </div>
-      );
-    } else {
-      return (
-        <div key={boilerplate.id}>
-          <Card>
-            <Card.Header>
-              <h5>
-                <Link
-                  to={`/organizations/${currentOrganizationId}/boilerplates/${boilerplate.id}`}
-                >
-                  {boilerplate.title}
-                </Link>
-              </h5>
-            </Card.Header>
-            <Card.Body>
-              <p dangerouslySetInnerHTML={{ __html: boilerplate.text }}></p>
-              <p>Organization: {boilerplate.organization_name}</p>
-              <p>Category: {boilerplate.category_name}</p>
-              <p>Wordcount: {boilerplate.wordcount}</p>
-            </Card.Body>
-          </Card>
-          <br />
-        </div>
-      );
-    }
-  });
+  const categories = unique(
+    boilerplates.map((boilerplate) => boilerplate.category_name).sort()
+  );
 
   return (
     <div className="container">
       <h1>Boilerplates</h1>
-      <Button onClick={handleShow}>Add Content</Button>
-      <div>
-        <Modal onClose={handleClose} show={show}>
-          <BoilerplatesNew updateBoilerplates={updateBoilerplates} />
-        </Modal>
 
-        {/* Search input field */}
-        <Form>
-          <Form.Group>
-            <Form.Control
-              as="select"
-              name="filterParam"
-              value={filterParam}
-              onChange={handleSearchParamSelect}
-              required
-            >
-              <option value="filterText">Search By Text</option>
-              <option value="filterWordCount">Search By Word Count</option>
-            </Form.Control>
-          </Form.Group>
-          <Form.Group>
-            <Form.Label></Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Search parameters..."
-              value={searchText}
-              onChange={handleChange}
-            />
-          </Form.Group>
-        </Form>
-        <div>
-          <Form>
-            <Form.Group>
-              <Form.Label>Sort Parameter</Form.Label>
-              <Form.Control
-                as="select"
-                name="sortParam"
-                value={sortParam}
-                onChange={handleSortParamSelect}
-                required
-              >
-                <option value="" disabled>
-                  Sort By
-                </option>
-                <option value="title">Title</option>
-                <option value="category_name">Category</option>
-              </Form.Control>
-            </Form.Group>
-          </Form>
-        </div>
+      <Link to={`/organizations/${currentOrganizationId}/boilerplates-new/`}>
+        <Button>Add Boilerplate</Button>
+      </Link>
 
-        {highlightedBoilerplates}
-      </div>
+      <Form>
+        <Form.Group>
+          <Form.Label>Category</Form.Label>
+          <Form.Control
+            as="select"
+            value={selectedCategory}
+            onChange={handleChangeSelectedCategory}
+          >
+            <option value={NO_SELECTED_CATEGORY}>Select Category</option>
+            {categories.map((category) => (
+              <option key={category}>{category}</option>
+            ))}
+          </Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Max Word Count</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="10"
+            value={selectedMaxWordCount}
+            onChange={handleChangeSelectedMaxWordCount}
+          />
+        </Form.Group>
+      </Form>
+
+      <BoilerplatesTable boilerplates={markedBoilerplates} />
     </div>
   );
 }

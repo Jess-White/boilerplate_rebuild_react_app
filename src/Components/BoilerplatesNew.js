@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ReactQuill from "react-quill";
 import CategoriesNew from "./CategoriesNew";
 import "react-quill/dist/quill.snow.css";
@@ -18,9 +19,10 @@ export default function BoilerplatesNew(props) {
   const [categoryId, setCategoryId] = useState("");
   const [wordcount, setWordcount] = useState("");
   const [categories, setCategories] = useState([]);
-  const [isHiddenCategoriesNew, setIsHiddenCategoriesNew] = useState(true);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
+  const history = useHistory();
+
   const {
     currentOrganizationStore,
     currentOrganizationDispatch,
@@ -56,9 +58,14 @@ export default function BoilerplatesNew(props) {
     setWordcount("");
   };
 
-  const toggleHiddenCategoriesNew = () => {
-    setIsHiddenCategoriesNew(!isHiddenCategoriesNew);
+  const handleCancel = (event) => {
+    event.preventDefault();
+    history.push(`/organizations/${currentOrganizationId}/boilerplates`);
   };
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -121,14 +128,14 @@ export default function BoilerplatesNew(props) {
 
   return (
     <div className="container">
-      {!isHiddenCategoriesNew ? (
-        <CategoriesNew
-          categories={categories}
-          updateCategories={updateCategories}
-          toggleHiddenCategoriesNew={toggleHiddenCategoriesNew}
-        />
-      ) : null}
+      {/* <CategoriesNew
+        categories={categories}
+        updateCategories={updateCategories}
+      /> */}
       <Card>
+        <Card.Header>
+          <h4>Add New Boilerplate</h4>
+        </Card.Header>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group>
@@ -140,17 +147,6 @@ export default function BoilerplatesNew(props) {
                 onChange={(event) => setTitle(event.target.value)}
                 required
               />
-            </Form.Group>
-            <Form.Label>Boilerplate Text</Form.Label>
-            <ReactQuill
-              modules={modules}
-              format={formats}
-              value={quillText}
-              onChange={(value) => setQuillText(value)}
-            />
-            <Form.Group>
-              <Form.Label>Word Count</Form.Label>
-              <p>{countWords(quillText)}</p>
             </Form.Group>
             <Form.Group>
               <Form.Label>Category</Form.Label>
@@ -176,27 +172,41 @@ export default function BoilerplatesNew(props) {
                   );
                 })}
               </Form.Control>
-              {isHiddenCategoriesNew ? (
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={toggleHiddenCategoriesNew}
-                >
-                  Add New Category
-                </Button>
-              ) : (
-                <Button
-                  variant="warning"
-                  size="sm"
-                  onClick={toggleHiddenCategoriesNew}
-                >
-                  Close Category
-                </Button>
-              )}
+              <Button variant="primary" size="sm">
+                Add New Category
+              </Button>
+              <Form.Label>Boilerplate Text</Form.Label>
+              <ReactQuill
+                modules={modules}
+                format={formats}
+                value={quillText}
+                onChange={(value) => setQuillText(value)}
+              />
+              <Form.Group>
+                <Form.Label>Word Count: {countWords(quillText)}</Form.Label>
+              </Form.Group>
             </Form.Group>
 
-            <div className="text-center">
-              <Button type="submit">Add New Boilerplate</Button>
+            <div>
+              <Button
+                type="submit"
+                style={{
+                  maxWidth: "50%",
+                  align: "center",
+                }}
+                onClick={handleSubmit}
+              >
+                Save Changes
+              </Button>
+              <Button
+                style={{
+                  maxWidth: "50%",
+                  align: "center",
+                }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
             </div>
           </Form>
         </Card.Body>

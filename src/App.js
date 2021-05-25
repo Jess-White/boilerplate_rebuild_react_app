@@ -1,12 +1,10 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 
 import { useCurrentUserContext } from "./Contexts/currentUserContext";
 import { useCurrentOrganizationContext } from "./Contexts/currentOrganizationContext";
 
 import React, { Component, useEffect } from "react";
-// import Container from 'react-bootstrap/Container';
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { PrivateRoute } from "./Components/Helpers/PrivateRoute";
 
@@ -25,7 +23,6 @@ import Navigation from "./Components/Navigation";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 
-import Bios from "./Components/Bios/Bios";
 import Boilerplates from "./Components/Boilerplates";
 import Categories from "./Components/Categories";
 import Organizations from "./Components/Organizations";
@@ -36,9 +33,7 @@ import FundingOrgs from "./Components/FundingOrgs";
 // import Sections from './Components/Sections';
 // import ReportSections from './Components/ReportSections';
 
-import BiosShow from "./Components/Bios/BiosShow";
 import BoilerplatesShow from "./Components/BoilerplatesShow";
-import CategoriesShow from "./Components/CategoriesShow";
 import FundingOrgsShow from "./Components/FundingOrgsShow";
 import OrganizationsShow from "./Components/OrganizationsShow";
 import GrantsShow from "./Components/GrantsShow";
@@ -51,7 +46,6 @@ import ReportsFinalizeShow from "./Components/ReportsFinalizeShow";
 // import GrantsPrintableShow from './Components/GrantsPrintableShow';
 // import ReportsPrintableShow from './Components/ReportsPrintableShow';
 
-import BiosNew from "./Components/Bios/BiosNew";
 import BoilerplatesNew from "./Components/BoilerplatesNew";
 import CategoriesNew from "./Components/CategoriesNew";
 import FundingOrgsNew from "./Components/FundingOrgsNew";
@@ -61,12 +55,12 @@ import SectionsNew from "./Components/SectionsNew";
 import ReportsNew from "./Components/ReportsNew";
 // import ReportSectionsNew from './Components/ReportSectionsNew';
 
+import BoilerplatesEdit from "./Components/BoilerplatesEdit";
+
 export default function App() {
   const { currentUserStore, currentUserDispatch } = useCurrentUserContext();
-  const {
-    currentOrganizationStore,
-    currentOrganizationDispatch,
-  } = useCurrentOrganizationContext();
+  const { currentOrganizationStore, currentOrganizationDispatch } =
+    useCurrentOrganizationContext();
 
   return (
     <div className="App">
@@ -147,58 +141,49 @@ export default function App() {
           />
           <PrivateRoute
             exact
-            path={"/organizations/:org_id/bios"}
-            component={Bios}
-          />
-          <PrivateRoute
-            path={"/organizations/:org_id/bios/:bio_id"}
-            component={BiosShow}
-          />
-          <PrivateRoute
-            exact
             path={"/organizations/:org_id/boilerplates"}
             component={Boilerplates}
           />
           <PrivateRoute
+            exact
             path={"/organizations/:org_id/boilerplates/:boilerplate_id"}
             component={BoilerplatesShow}
           />
           <PrivateRoute
-            path={"/organizations/:org_id/categories/:category_id"}
-            component={CategoriesShow}
+            exact
+            path={"/organizations/:org_id/boilerplates-edit/:boilerplate_id"}
+            component={BoilerplatesEdit}
           />
           <PrivateRoute
+            exact
             path={"/organizations/:org_id/funding_orgs/:funding_org_id"}
             component={FundingOrgsShow}
           />
           <PrivateRoute
+            exact
             path={"/organizations/:org_id"}
             component={OrganizationsShow}
           />
-
           <PrivateRoute
-            path={"/organizations/:org_id/bios-new"}
-            component={BiosNew}
-          />
-          <PrivateRoute
+            exact
             path={"/organizations/:org_id/boilerplates-new"}
             component={BoilerplatesNew}
           />
           <PrivateRoute
+            exact
             path={"/organizations/:org_id/categories-new"}
             component={CategoriesNew}
           />
           <PrivateRoute
+            exact
             path={"/organizations/:org_id/funding_orgs-new"}
             component={FundingOrgsNew}
           />
           <PrivateRoute
+            exact
             path={"/organizations-new"}
             component={OrganizationsNew}
           />
-          {/* <Route
-              exact path={"/logout"} component={Logout}
-            /> */}
         </Switch>
       </BrowserRouter>
     </div>

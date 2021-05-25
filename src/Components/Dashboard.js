@@ -6,25 +6,16 @@ import { useHistory } from "react-router-dom";
 
 export default function Dashboard() {
   const { currentUserStore, currentUserDispatch } = useCurrentUserContext();
-  const {
-    currentOrganizationStore,
-    currentOrganizationDispatch,
-  } = useCurrentOrganizationContext();
+  const { currentOrganizationStore, currentOrganizationDispatch } =
+    useCurrentOrganizationContext();
   console.log(currentUserStore);
   console.log(currentOrganizationStore);
   const history = useHistory();
-  const currentOrganizationId =
-    currentOrganizationStore.currentOrganizationInfo &&
-    currentOrganizationStore.currentOrganizationInfo.id;
+  const currentOrganizationId = currentOrganizationStore.currentOrganization?.id
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  //   // console.log(currentOrganizationStore);
-  // }, {currentOrganizationStore.currentOrganization]);
 
   return (
     <div
@@ -71,22 +62,6 @@ export default function Dashboard() {
                 Store materials for your organization in this library. Save
                 information about your mission, programs, metrics, client
                 communities, and activities in accessible text blocks.
-                <br />
-              </Card.Body>
-            </Card>
-          </div>
-          <div className="row h-50">
-            <Card
-              className="card-component"
-              onClick={() => {
-                history.push(`organizations/${currentOrganizationId}/bios/`);
-              }}
-            >
-              <Card.Header>Staff Bios &gt;</Card.Header>
-              <Card.Body>
-                Store bios for your organization employees and board in this
-                library. Save information about employee titles, work history,
-                qualifications, and activities in accessible text blocks
                 <br />
               </Card.Body>
             </Card>

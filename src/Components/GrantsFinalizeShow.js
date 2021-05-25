@@ -15,8 +15,24 @@ import {
   createGrant,
   copyGrant,
 } from "../Services/Organizations/GrantsService";
-import { getAllBios } from "../Services/Organizations/BiosService";
+import { reorderGrantSection } from "../Services/Organizations/Grants/GrantSectionsService";
 import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
+import SortableElement from "./Elements/SortableElement";
+
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 export default function GrantsFinalizeShow(props) {
   const [grant, setGrant] = useState("");
@@ -37,7 +53,6 @@ export default function GrantsFinalizeShow(props) {
   const [isCopyGrantHidden, setIsCopyGrantHidden] = useState(true);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
-  const [bios, setBios] = useState([]);
   const [boilerplates, setBoilerplates] = useState([]);
   const [copyTitle, setCopyTitle] = useState("");
   const [copyRfpUrl, setCopyRfpUrl] = useState("");
@@ -65,6 +80,13 @@ export default function GrantsFinalizeShow(props) {
   const [show, setShow] = useState(false);
   const handleClose = (event) => setShow(false);
   const handleShow = (event) => setShow(true);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -96,14 +118,6 @@ export default function GrantsFinalizeShow(props) {
       getAllBoilerplates(organizationClient).then((boilerplates) => {
         setBoilerplates(boilerplates);
       });
-      getAllBios(organizationClient)
-        .then((bios) => {
-          setBios(bios);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     }
   }, [currentOrganizationId]);
 
@@ -232,6 +246,35 @@ export default function GrantsFinalizeShow(props) {
     setSections(sections);
   };
 
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setSections((sections) => {
+        const oldIndex = sections.findIndex(
+          (section) => section.id === active.id
+        );
+        const newIndex = sections.findIndex(
+          (section) => section.id === over.id
+        );
+        return arrayMove(sections, oldIndex, newIndex);
+      });
+
+      const sectionId = active.id;
+      const sortOrder = active.data.current.sortable.index;
+
+      reorderGrantSection(organizationClient, grant.id, sectionId, sortOrder)
+        .then((response) => {
+          console.log(
+            `Succesfully sorted section ${sectionId} to index ${sortOrder}!`,
+            response
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
   if (loading) {
     return <h1>Loading....</h1>;
   }
@@ -319,23 +362,50 @@ export default function GrantsFinalizeShow(props) {
           ) : null}
         </Card>
         {/* end of copy grant feature */}
-
-        {sections.map((section) => {
-          return (
-            <div key={section.id}>
-              <SectionsShow
-                isUnzipped={section.isUnzipped}
-                toggleUnzipped={toggleUnzipped}
-                section_id={section.id}
-                grant_id={id}
-                boilerplates={boilerplates}
-                bios={bios}
-                updateSections={updateSections}
-              />
-            </div>
-          );
-        })}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={sections}
+            strategy={verticalListSortingStrategy}
+          >
+            <ol>
+              {sections.map((section) => (
+                <SortableElement key={section.id} id={section.id}>
+                  <SectionsShow
+                    isUnzipped={section.isUnzipped}
+                    toggleUnzipped={toggleUnzipped}
+                    section_id={section.id}
+                    grant_id={id}
+                    boilerplates={boilerplates}
+                    updateSections={updateSections}
+                  />
+                </SortableElement>
+              ))}
+            </ol>
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );
 }
+
+//               )
+//             })}
+//           </SortableContext>
+//         </DndContext>
+//       </div>
+//     </div>
+//   );
+// }
+
+//               )
+//             })}
+//           </SortableContext>
+//         </DndContext>
+//       </div>
+//     </div>
+//   );
+// }

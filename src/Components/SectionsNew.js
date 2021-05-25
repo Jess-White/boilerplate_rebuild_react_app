@@ -8,7 +8,6 @@ import "react-quill/dist/quill.snow.css";
 import { countWords } from "../Services/infofunctions";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
 import { createGrantSection } from "../Services/Organizations/Grants/GrantSectionsService";
-import { getAllBios } from "../Services/Organizations/BiosService";
 import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
 
 export default function SectionsNew(props) {
@@ -20,7 +19,6 @@ export default function SectionsNew(props) {
   const [boilerplates, setBoilerplates] = useState([]);
   const [currentBoilerplate, setCurrentBoilerplate] = useState("");
   const [isHidden, setIsHidden] = useState(true);
-  const [bios, setBios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -40,14 +38,6 @@ export default function SectionsNew(props) {
       getAllBoilerplates(organizationClient)
         .then((boilerplates) => {
           setBoilerplates(boilerplates);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      getAllBios(organizationClient)
-        .then((bios) => {
-          setBios(bios);
-          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
@@ -236,32 +226,6 @@ export default function SectionsNew(props) {
                         }
                       >
                         {boilerplate.title}
-                      </option>
-                    );
-                  })}
-                </Form.Control>
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Add Bio Text to text field below</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="currentBoilerplate"
-                  value={currentBoilerplate}
-                  onChange={handleSelect}
-                >
-                  <option value="" disabled>
-                    Select Bio
-                  </option>
-                  {bios.map((bio) => {
-                    return (
-                      <option
-                        key={bio.id}
-                        value={`${bio.first_name} ${bio.last_name}: ${bio.text}`}
-                        onChange={(event) =>
-                          setCurrentBoilerplate(event.target.value)
-                        }
-                      >
-                        {`${bio.first_name} ${bio.last_name}`}
                       </option>
                     );
                   })}

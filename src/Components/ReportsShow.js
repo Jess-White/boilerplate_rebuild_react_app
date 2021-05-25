@@ -13,7 +13,6 @@ import {
   updateGrantReport,
   deleteGrantReport,
 } from "../Services/Organizations/Grants/GrantReportsService";
-import { getAllBios } from "../Services/Organizations/BiosService";
 import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
 
 //fontawesome
@@ -36,9 +35,8 @@ export default function ReportsShow(props) {
   const [boilerplates, setBoilerplates] = useState([]);
   const [isHidden, setIsHidden] = useState(true);
   const [isGrantHidden, setIsGrantHidden] = useState(true);
-  const [isHiddenNewReportSection, setIsHiddenNewReportSection] = useState(
-    true
-  );
+  const [isHiddenNewReportSection, setIsHiddenNewReportSection] =
+    useState(true);
   const [grantTitle, setGrantTitle] = useState("");
   const [grantSections, setGrantSections] = useState([]);
   const [reportSections, setReportSections] = useState([]);
@@ -87,14 +85,6 @@ export default function ReportsShow(props) {
       getAllBoilerplates(organizationClient)
         .then((boilerplates) => {
           setBoilerplates(boilerplates);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      getAllBios(organizationClient)
-        .then((bios) => {
-          setBios(bios);
-          setLoading(false);
         })
         .catch((error) => {
           console.log(error);

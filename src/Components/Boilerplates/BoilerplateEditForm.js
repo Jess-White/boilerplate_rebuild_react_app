@@ -58,80 +58,77 @@ export default function BoilerplateEditForm(props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group>
-        <Form.Label>Title</Form.Label>
-        <Form.Control
-          type="text"
-          value={newTitle}
-          name="newTitle"
-          onChange={(event) => setNewTitle(event.target.value)}
-          required
+    <div>
+      <h4>Edit Boilerplate</h4>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>Title</Form.Label>
+          <Form.Control
+            type="text"
+            value={newTitle}
+            name="newTitle"
+            onChange={(event) => setNewTitle(event.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Category</Form.Label>
+          <Form.Control
+            as="select"
+            name="newCategoryId"
+            value={newCategoryId}
+            onChange={(event) => setNewCategoryId(event.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Select Category
+            </option>
+            {categories.map((category) => {
+              return (
+                <option
+                  key={category.id}
+                  value={category.id}
+                  onChange={(event) => setNewCategoryId(event.target.value)}
+                >
+                  {category.name}
+                </option>
+              );
+            })}
+          </Form.Control>
+        </Form.Group>
+        <ReactQuill
+          name="newQuillText"
+          modules={modules}
+          format={formats}
+          defaultValue={props.quillText}
+          onChange={(value) => setNewQuillText(value)}
+          style={{ backgroundColor: "#fefefe", color: "black" }}
         />
-      </Form.Group>
-      <ReactQuill
-        name="newQuillText"
-        modules={modules}
-        format={formats}
-        defaultValue={props.quillText}
-        onChange={(value) => setNewQuillText(value)}
-        style={{ backgroundColor: "#fefefe", color: "black" }}
-      />
-      <p style={{ color: "#fefefe" }}>Word Count: {countWords(newQuillText)}</p>
-      <Form.Group>
-        <Form.Label>Category</Form.Label>
-        <Form.Control
-          as="select"
-          name="newCategoryId"
-          value={newCategoryId}
-          onChange={(event) => setNewCategoryId(event.target.value)}
-          required
-        >
-          <option value="" disabled>
-            Select Category
-          </option>
-          {categories.map((category) => {
-            return (
-              <option
-                key={category.id}
-                value={category.id}
-                onChange={(event) => setNewCategoryId(event.target.value)}
-              >
-                {category.name}
-              </option>
-            );
-          })}
-        </Form.Control>
-      </Form.Group>
-      <div>
-        <Button
-          variant="outline-success"
-          type="submit"
-          style={{
-            maxWidth: "50%",
-            align: "center",
-            backgroundColor: "#23cb87",
-            color: "#09191b",
-            fontWeight: "bolder",
-          }}
-          onClick={handleSubmit}
-        >
-          Save Changes
-        </Button>
-        <Button
-          variant="outline-success"
-          style={{
-            maxWidth: "50%",
-            align: "center",
-            backgroundColor: "#23cb87",
-            color: "#09191b",
-            fontWeight: "bolder",
-          }}
-          onClick={handleCancel}
-        >
-          Cancel
-        </Button>
-      </div>
-    </Form>
+        <p style={{ color: "#fefefe" }}>
+          Word Count: {countWords(newQuillText)}
+        </p>
+        <div>
+          <Button
+            type="submit"
+            style={{
+              maxWidth: "50%",
+              align: "center",
+            }}
+            onClick={handleSubmit}
+          >
+            Save Changes
+          </Button>
+          <Button
+            style={{
+              maxWidth: "50%",
+              align: "center",
+            }}
+            onClick={handleCancel}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Form>
+    </div>
   );
 }

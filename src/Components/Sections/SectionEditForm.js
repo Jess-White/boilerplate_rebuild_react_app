@@ -3,10 +3,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-
-// import axios from "axios";
-// import { useHistory } from "react-router-dom";
-// import { useCurrentOrganizationContext } from "../../Contexts/currentOrganizationContext";
 import countWords from "../../Helpers/countWords";
 
 const modules = {
@@ -95,30 +91,6 @@ export default function SectionEditForm(props) {
                 onChange={(event) => setCurrentBoilerplate(event.target.value)}
               >
                 {boilerplate.title}
-              </option>
-            );
-          })}
-        </Form.Control>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Add Bio Text to text field below</Form.Label>
-        <Form.Control
-          as="select"
-          name="currentBoilerplate"
-          value={currentBoilerplate}
-          onChange={handleSelect}
-        >
-          <option value="" disabled>
-            Select Bio
-          </option>
-          {props.bios.map((bio) => {
-            return (
-              <option
-                key={bio.id}
-                value={`${bio.first_name} ${bio.last_name}: ${bio.text}`}
-                onChange={(event) => setCurrentBoilerplate(event.target.value)}
-              >
-                {`${bio.first_name} ${bio.last_name}`}
               </option>
             );
           })}

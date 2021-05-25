@@ -7,14 +7,19 @@ import Button from "react-bootstrap/Button";
 // import { useCurrentOrganizationContext } from "../../Contexts/currentOrganizationContext";
 
 export default function CategoriesShowForm(props) {
-  const { categories, onSubmit, onCancel } = props;
-  const [newName, setNewName] = useState(props.name);
+  console.log("rendered!");
+  const { onSubmit, onCancel } = props;
+  const [category, setCategory] = useState(props.category);
+  const [newName, setNewName] = useState(props.category.name);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmit({
-      newName,
-    });
+    onSubmit(
+      {
+        newName,
+      },
+      category.id
+    );
   };
 
   const handleCancel = (event) => {

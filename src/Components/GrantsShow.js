@@ -15,8 +15,24 @@ import {
   updateGrant,
   deleteGrant,
 } from "../Services/Organizations/GrantsService";
-import { getAllBios } from "../Services/Organizations/BiosService";
+import { reorderGrantSection } from "../Services/Organizations/Grants/GrantSectionsService";
 import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
+import SortableElement from "./Elements/SortableElement";
+
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 //fontawesome
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -69,6 +85,13 @@ export default function GrantsShow(props) {
   const handleClose = (event) => setShow(false);
   const handleShow = (event) => setShow(true);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (currentOrganizationId) {
@@ -92,14 +115,6 @@ export default function GrantsShow(props) {
       getAllBoilerplates(organizationClient)
         .then((boilerplates) => {
           setBoilerplates(boilerplates);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      getAllBios(organizationClient)
-        .then((bios) => {
-          setBios(bios);
-          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
@@ -180,72 +195,34 @@ export default function GrantsShow(props) {
       });
   };
 
-  const dragstartHandler = (event) => {
-    event.dataTransfer.setData(
-      "text/plain",
-      event.target.getAttribute("data--section_id")
-    );
-  };
-
-  const dragoverHandler = (event) => {
-    event.preventDefault();
-  };
-
-  const dropHandler = (event) => {
-    event.preventDefault();
-    const sourceSectionId = event.dataTransfer.getData("text/plain");
-    const closestSection = event.target.closest("div[data--section_id]");
-    if (!closestSection) {
-      return;
-    }
-
-    const closestSectionId = closestSection.getAttribute("data--section_id");
-
-    const [sourceSection] = sections.filter((section) => {
-      return section.id == sourceSectionId;
-    });
-
-    console.log(sourceSection, sourceSectionId, closestSection);
-
-    const newSections = [];
-    sections.forEach((section) => {
-      if (section.id == closestSectionId) {
-        newSections.push(sourceSection);
-        if (sourceSectionId == closestSectionId) {
-          return;
-        }
-      }
-      if (section.id == sourceSectionId) {
-        return;
-      }
-
-      newSections.push(section);
-    });
-
-    console.log(newSections);
-
-    const newOrders = newSections.reduce((data, section, i) => {
-      data[section.id] = i;
-      return data;
-    }, {});
-
-    axios
-      .post(
-        `/api/organizations/${currentOrganizationId}/grants/` +
-          id +
-          "/actions/reordersections",
-        newOrders,
-        {
-          headers: { Authorization: `Bearer ${localStorage.token}` },
-        }
-      )
-      .then((response) => {
-        setSections(newSections);
-      })
-      .catch((error) => {
-        console.log("grant update error", error);
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setSections((sections) => {
+        const oldIndex = sections.findIndex(
+          (section) => section.id === active.id
+        );
+        const newIndex = sections.findIndex(
+          (section) => section.id === over.id
+        );
+        return arrayMove(sections, oldIndex, newIndex);
       });
-  };
+
+      const sectionId = active.id;
+      const sortOrder = active.data.current.sortable.index;
+
+      reorderGrantSection(organizationClient, grant.id, sectionId, sortOrder)
+        .then((response) => {
+          console.log(
+            `Succesfully sorted section ${sectionId} to index ${sortOrder}!`,
+            response
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
 
   if (loading) {
     return (
@@ -299,39 +276,36 @@ export default function GrantsShow(props) {
         </Card.Body>
 
         {/* end of grant update, beginning of sections and reports */}
-
-        <Card.Body onDrop={dropHandler} onDragOver={dragoverHandler}>
-          {grant.sections.length ? (
-            grant.sections.map((section) => {
-              return (
-                <div
-                  id={"section-" + section.id}
-                  key={section.id}
-                  data--section_id={section.id}
-                  draggable="true"
-                  onDragStart={dragstartHandler}
-                >
-                  <SectionsShow
-                    grant_id={grant.id}
-                    section_id={section.id}
-                    updateSections={updateSections}
-                    bios={bios}
-                    boilerplates={boilerplates}
-                    organization_id={organizationId}
-                  />
-                </div>
-              );
-            })
-          ) : (
-            <h4>There are no sections yet.</h4>
-          )}
+        <Card.Body>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={sections}
+              strategy={verticalListSortingStrategy}
+            >
+              <ol>
+                {sections.map((section) => (
+                  <SortableElement key={section.id} id={section.id}>
+                    <SectionsShow
+                      section_id={section.id}
+                      grant_id={grant.id}
+                      boilerplates={boilerplates}
+                      updateSections={updateSections}
+                    />
+                  </SortableElement>
+                ))}
+              </ol>
+            </SortableContext>
+          </DndContext>
           <SectionsNew
-            sort_number={grant.sections.length}
+            sort_number={sections.length}
             grant_id={grant.id}
             addNewSections={addNewSections}
           />
         </Card.Body>
-
         {/* reports */}
 
         <Card.Header>

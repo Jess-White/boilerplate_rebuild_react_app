@@ -53,3 +53,16 @@ export const updateGrantSection = (
     .patch(`/grants/${grantId}/sections/${grantSectionId}`, fieldsToUpdate)
     .then((response) => response.data);
 };
+
+export const reorderGrantSection = (
+  organizationClient,
+  grantId,
+  grantSectionId,
+  sortOrder
+) => {
+  return organizationClient
+    .patch(`/grants/${grantId}/actions/reorder_section/${grantSectionId}`, {
+      sort_order: sortOrder,
+    })
+    .then((response) => response.data);
+};

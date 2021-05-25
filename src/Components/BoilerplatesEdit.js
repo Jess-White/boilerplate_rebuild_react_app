@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Modal from "./Elements/Modal";
-import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
 import BoilerplateEditForm from "./Boilerplates/BoilerplateEditForm";
@@ -12,6 +11,7 @@ import {
 } from "../Services/Organizations/BoilerplatesService";
 import countWords from "../Helpers/countWords";
 import { getAllCategories } from "../Services/Organizations/CategoriesService";
+import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
 
 //fontawesome
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -117,58 +117,20 @@ export default function BoilerplatesShow(props) {
     );
   }
 
-  const Header = (
-    <Card.Header>
-      <h3>{boilerplate.title}</h3>
-      <Link
-        to={`/organizations/${currentOrganizationId}/boilerplates-edit/${boilerplate.id}/`}
-      >
-        <FontAwesomeIcon
-          icon={faEdit}
-          style={{
-            color: "black",
-            fontSize: "1.5rem",
-          }}
-          // onClick={handleShow}
-        />
-      </Link>
-      <FontAwesomeIcon
-        icon={faTrashAlt}
-        style={{
-          color: "black",
-          fontSize: "1.5rem",
-        }}
-        onClick={handleBoilerplateDelete}
-      />
-    </Card.Header>
-  );
-
   return (
     <div className="flex-container">
       <Card>
-        {Header}
         <Card.Body>
-          <p>Category</p>
-          <p>{boilerplate.category.name}</p>
-          <p>Boilerplate Text</p>
-          <p dangerouslySetInnerHTML={{ __html: quillText }}></p>
-          <p>Word Count: {countWords(quillText)}</p>
+          <BoilerplateEditForm
+            title={boilerplate.title}
+            quillText={quillText}
+            categoryId={boilerplate.category_id}
+            categories={categories}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+          />
         </Card.Body>
       </Card>
-      {/* <Modal show={show} onClose={handleClose}>
-        <Card>
-          <Card.Body>
-            <BoilerplateEditForm
-              title={boilerplate.title}
-              quillText={quillText}
-              categoryId={boilerplate.category_id}
-              categories={categories}
-              onSubmit={handleSubmit}
-              onCancel={handleCancel}
-            />
-          </Card.Body>
-        </Card>
-      </Modal> */}
     </div>
   );
 }

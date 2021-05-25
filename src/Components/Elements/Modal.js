@@ -5,16 +5,7 @@ export default function Modal(props) {
     return null;
   }
   return (
-    <div>
-      <div>
-        <button
-          onClick={() => {
-            props.onClose && props.onClose();
-          }}
-        >
-          Close
-        </button>
-      </div>
+    <div className="modal-popup">
       <div>{props.children}</div>
     </div>
   );

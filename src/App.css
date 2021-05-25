@@ -1,13 +1,10 @@
 .App {
-  /* background-color: #09191b; */
-  /* background-color:#649ea5;
-  background-color:#c7dcde; */
   background-color: #f5f7f9;
 }
 
 body {
-  margin: 0;
-  padding-bottom: 50%;
+  /* margin: 0;
+  padding-bottom: 0; */
 }
 
 .jumbotron-head {
@@ -20,7 +17,6 @@ body {
 }
 
 .navbar {
-  /* background-color: #00B556; */
   margin-bottom: 5%;
   font-weight: bold;
   font-size: 1rem;
@@ -29,54 +25,30 @@ body {
 .navbar.item {
 }
 
-/* .modal {
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: #032fff;
-  background-color: rgba(0, 0, 0, 0.4);
-} */
-
 .card {
   font-size: 0.5rem;
   font-weight: bold;
-  /* background-color: #00B556; */
-  /* background-color: #037d50; */
-  /* background-color: #063223; */
   color: "#fefefe";
-  /* width: 50rem; */
   text-align: left;
   color: "#09191b";
-  box-shadow: 0 0 20px 0 rgba(100, 100, 100, 0.5);
 }
 
 .card .form-control {
-  /* background-color: #00B556; */
-  /* color: #bdf7e4; */
   font-size: 1.5rem;
   font-weight: bold;
 }
 
 .card-body {
   font-size: 1rem;
-  /* background-color: #1bd036; */
-  /* background-color: #037d50; */
-  /* background-color: #063223; */
-  /* background-color: #037d50; */
 }
 
 .card-component {
-  color: #fefefe;
+  color: black;
   font-size: 1rem;
   font-weight: bold;
-  /* width: 40rem; */
   text-align: left;
-  background-color: #09191b;
+  background-color: white;
   margin-left: 0;
-  box-shadow: 0 0 20px 0 rgba(100, 100, 100, 0.5);
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
@@ -86,12 +58,11 @@ body {
 }
 
 .card-component .card-header {
-  color: #7be8bc;
+  color: black;
   font-size: 2rem;
   font-weight: bold;
-  /* width: 40rem; */
   text-align: left;
-  background-color: #09191b;
+  background-color: lightgray;
 }
 
 .card-component:hover .card-header {
@@ -102,9 +73,8 @@ body {
   background-color: #fefefe;
   font-size: 1.5rem;
   font-weight: bold;
-  /* width: 40rem; */
   text-align: left;
-  color: #09191b;
+  color: black;
 }
 
 .card-component:hover .card-body {
@@ -125,14 +95,6 @@ body {
   padding: 2rem;
   align: center;
 }
-
-/* .span {
-  color: black;
-}
-
-.card p {
-  color: black;
-} */
 
 .btn.basic {
   background-color: #0c5f42;
@@ -165,68 +127,15 @@ a.basic:hover {
   background-color: yellow;
 }
 
-/* div .app{
-
-} */
-
-.App {
-  /* background-color: #9def91; */
-  /* background-color: #063223; */
-  /* background-color: #037d50; */
-  margin: 0;
-  padding-bottom: 50%;
+.modal-popup {
+  display: block;
+  position: absolute;
+  width: 50%;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 0px;
+  position: fixed;
+  left: 25%;
+  box-shadow: 0 0 20px 0 rgba(100, 100, 100, 0.5);
+  z-index: 999;
 }
-
-/* .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
-
-/* Things we can do with React Bootstrap:
-Body color 
-card body color 
-text color 
-button color 
-font type
-font size
-font weight */
-
-/* Things we cannot do without customization:
-link color 
-navbar??? pretty much anything
-card header
-borders */

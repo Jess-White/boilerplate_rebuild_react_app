@@ -28,7 +28,7 @@ export default function Grants() {
 
   const createUnzipped = (data) => {
     return data.map((filteredGrant) => {
-      filteredGrant.isUnzipped = false;
+      filteredGrant.isUnzipped = true;
       return filteredGrant;
     });
   };
