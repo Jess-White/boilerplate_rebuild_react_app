@@ -129,7 +129,7 @@ export default function GrantsShow(props) {
     newSuccessful,
     newPurpose,
   }) => {
-    updateGrant(organizationClient, id, {
+    updateGrant(organizationClient, grant.id, {
       title: newTitle,
       rfp_url: newRfpUrl,
       deadline: newDeadline,
