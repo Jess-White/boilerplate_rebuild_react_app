@@ -6,6 +6,7 @@ import Moment from "react-moment";
 import Form from "react-bootstrap/Form";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
 import { getAllGrants } from "../Services/Organizations/GrantsService";
+import GrantsTable from "./Grants/GrantsTable";
 
 export default function Grants() {
   const [loading, setLoading] = useState(true);
@@ -398,6 +399,8 @@ export default function Grants() {
             </Form.Control>
           </Form.Group>
         </Form>
+
+        <GrantsTable grants={grants} />
 
         {highlightedGrants}
       </div>
