@@ -7,6 +7,8 @@ import Form from "react-bootstrap/Form";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
 import { getAllGrants } from "../Services/Organizations/GrantsService";
 import GrantsTable from "./Grants/GrantsTable";
+import { TraversalOrder } from "@dnd-kit/core";
+import formatGrantStatus, { Tab } from "../Helpers/formatGrantStatus";
 
 export default function Grants() {
   const [loading, setLoading] = useState(true);
@@ -15,6 +17,7 @@ export default function Grants() {
   const [searchText, setSearchText] = useState("");
   const [filterParam, setFilterParam] = useState("");
   const [sortParam, setSortParam] = useState("");
+  const [selectedTab, setSelectedTab] = useState(Tab.DRAFT);
   const {
     currentOrganizationStore,
     currentOrganizationDispatch,
@@ -138,6 +141,11 @@ export default function Grants() {
     return splitStr.join(" ");
   };
 
+  const selectedGrants = grants.filter((grant) => {
+    const status = formatGrantStatus(grant);
+    return selectedTab === status;
+  });
+
   if (loading) {
     return (
       <div className="container">
@@ -145,207 +153,6 @@ export default function Grants() {
       </div>
     );
   }
-
-  let highlightedGrants = filteredGrants.map((grant) => {
-    if (searchText && filterParam === "filterTitle") {
-      let results = grant.title.replace(
-        new RegExp(searchText, "gi"),
-        (match) => `<mark>${match}</mark>`
-      );
-
-      return (
-        <div key={grant.id}>
-          {grant.isUnzipped === false ? (
-            <Card>
-              <Card.Header>
-                Title:
-                <a
-                  dangerouslySetInnerHTML={{ __html: results }}
-                  href={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                ></a>
-                <h1 onClick={() => toggleUnzipped(grant.id, true)}>+</h1>
-              </Card.Header>
-            </Card>
-          ) : (
-            <Card>
-              <Card.Header>
-                Title:
-                <a
-                  dangerouslySetInnerHTML={{ __html: results }}
-                  href={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                ></a>
-                <h1 onClick={() => toggleUnzipped(grant.id, false)}>-</h1>
-              </Card.Header>
-              <Card.Body>
-                <p>Purpose: {grant.purpose}</p>
-                <p>Funding Organization: {grant.funding_org_name}</p>
-                <p>RFP URL: {grant.rfp_url}</p>
-                <p>Deadline: {formatDate(grant.deadline)}</p>
-                <p>
-                  Deadline: <Moment>{grant.deadline}</Moment>
-                </p>
-                <Moment fromNow>{grant.deadline}</Moment>
-                <p>Submitted: {grant.submitted ? "yes" : "not yet"}</p>
-                <p>Successful: {grant.successful ? "yes" : "not yet"}</p>
-                <p>Organization Name: {grant.organization_name}</p>
-              </Card.Body>
-            </Card>
-          )}
-          <br />
-        </div>
-      );
-    } else if (searchText && filterParam === "filterPurpose") {
-      let results = grant.purpose.replace(
-        new RegExp(searchText, "gi"),
-        (match) => `<mark>${match}</mark>`
-      );
-      return (
-        <div key={grant.id}>
-          {grant.isUnzipped === false ? (
-            <Card>
-              <Card.Header>
-                Title:
-                <Link
-                  to={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                >
-                  {grant.title}
-                </Link>
-                <h1 onClick={() => toggleUnzipped(grant.id, true)}>+</h1>
-              </Card.Header>
-            </Card>
-          ) : (
-            <Card>
-              <Card.Header>
-                Title:
-                <Link
-                  to={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                >
-                  {grant.title}
-                </Link>
-                <h1 onClick={() => toggleUnzipped(grant.id, false)}>-</h1>
-              </Card.Header>
-              <Card.Body>
-                <p>
-                  Purpose:
-                  <span dangerouslySetInnerHTML={{ __html: results }}></span>
-                </p>
-                <p>Funding Organization: {grant.funding_org_name}</p>
-                <p>RFP URL: {grant.rfp_url}</p>
-                <p>Deadline: {formatDate(grant.deadline)}</p>
-                <p>
-                  Deadline: <Moment>{grant.deadline}</Moment>
-                </p>
-                <Moment fromNow>{grant.deadline}</Moment>
-                <p>Submitted: {grant.submitted ? "yes" : "not yet"}</p>
-                <p>Successful: {grant.successful ? "yes" : "not yet"}</p>
-                <p>Organization Name: {grant.organization_name}</p>
-              </Card.Body>
-            </Card>
-          )}
-          <br />
-        </div>
-      );
-    } else if (searchText && filterParam === "filterFundingOrg") {
-      let results = grant.funding_org_name.replace(
-        new RegExp(searchText, "gi"),
-        (match) => `<mark>${match}</mark>`
-      );
-      return (
-        <div key={grant.id}>
-          {grant.isUnzipped === false ? (
-            <Card className="card-component">
-              <Card.Header>
-                Title:
-                <Link
-                  to={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                >
-                  {grant.title}
-                </Link>
-                <h1 onClick={() => toggleUnzipped(grant.id, true)}>+</h1>
-              </Card.Header>
-            </Card>
-          ) : (
-            <Card className="card-component">
-              <Card.Header>
-                Title:
-                <Link
-                  to={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                >
-                  {grant.title}
-                </Link>
-                <h1 onClick={() => toggleUnzipped(grant.id, false)}>-</h1>
-              </Card.Header>
-              <Card.Body>
-                <h4>Purpose: {grant.purpose}</h4>
-                <h4>
-                  Funding Organization:
-                  <span dangerouslySetInnerHTML={{ __html: results }}></span>
-                </h4>
-                <h4>RFP URL: {grant.rfp_url}</h4>
-                <h4>Deadline: {formatDate(grant.deadline)}</h4>
-                <h4>
-                  Deadline: <Moment>{grant.deadline}</Moment>
-                </h4>
-                <Moment fromNow>{grant.deadline}</Moment>
-                <h4>Submitted: {grant.submitted ? "yes" : "not yet"}</h4>
-                <h4>Successful: {grant.successful ? "yes" : "not yet"}</h4>
-                <h4>Organization Name: {grant.organization_name}</h4>
-              </Card.Body>
-            </Card>
-          )}
-          <br />
-        </div>
-      );
-    } else {
-      return (
-        <div key={grant.id}>
-          {grant.isUnzipped === false ? (
-            <Card className="card-component">
-              <Card.Header>
-                <h3>
-                  Title:
-                  <Link
-                    to={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                  >
-                    {grant.title}
-                  </Link>
-                </h3>
-                <h4 onClick={() => toggleUnzipped(grant.id, true)}>+</h4>
-              </Card.Header>
-            </Card>
-          ) : (
-            <Card className="card-component">
-              <Card.Header>
-                <h3>
-                  Title:{" "}
-                  <Link
-                    to={`/organizations/${currentOrganizationId}/grants/${grant.id}`}
-                  >
-                    {grant.title}
-                  </Link>
-                </h3>
-                <h4 onClick={() => toggleUnzipped(grant.id, false)}>-</h4>
-              </Card.Header>
-              <Card.Body>
-                <h4>Purpose: {grant.purpose}</h4>
-                <h4>Funding Organization: {grant.funding_org_name}</h4>
-                <h4>RFP URL: {grant.rfp_url}</h4>
-                <h4>Deadline: {formatDate(grant.deadline)}</h4>
-                <h4>
-                  Deadline: <Moment>{grant.deadline}</Moment>
-                </h4>
-                <Moment fromNow>{grant.deadline}</Moment>
-                <h4>Submitted: {grant.submitted ? "yes" : "not yet"}</h4>
-                <h4>Successful: {grant.successful ? "yes" : "not yet"}</h4>
-                <h4>Organization Name: {grant.organization_name}</h4>
-              </Card.Body>
-            </Card>
-          )}
-          <br />
-        </div>
-      );
-    }
-  });
 
   return (
     <div className="component container">
@@ -399,10 +206,12 @@ export default function Grants() {
             </Form.Control>
           </Form.Group>
         </Form>
-
-        <GrantsTable grants={grants} />
-
-        {highlightedGrants}
+        {Object.values(Tab).map((tab) => (
+          <Button key={tab} onClick={() => setSelectedTab(tab)}>
+            {tab}
+          </Button>
+        ))}
+        <GrantsTable grants={selectedGrants} />
       </div>
     </div>
   );

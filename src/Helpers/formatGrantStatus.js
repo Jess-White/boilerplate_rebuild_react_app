@@ -1,11 +1,18 @@
+export const Tab = {
+  ARCHIVED: "Archived",
+  DRAFT: "Draft",
+  SUBMITTED: "Submitted",
+  SUCCESSFUL: "Successful",
+};
+
 export default function formatGrantStatus(grant) {
   if (grant.archived) {
-    return "Archived";
+    return Tab.ARCHIVED;
   } else if (grant.successful) {
-    return "Successful";
+    return Tab.SUCCESSFUL;
   } else if (grant.submitted) {
-    return "Submitted";
+    return Tab.SUBMITTED;
   } else {
-    return "Draft";
+    return Tab.DRAFT;
   }
 }
