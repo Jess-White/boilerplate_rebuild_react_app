@@ -1,4 +1,4 @@
-const countWords = (string) => {
+const countSectionWords = (string) => {
   if (string) {
     return string.split(" ").length;
   } else {
@@ -6,4 +6,4 @@ const countWords = (string) => {
   }
 };
 
-export default countWords;
+export default countSectionWords;
