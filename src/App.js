@@ -1,51 +1,28 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import { useCurrentUserContext } from "./Contexts/currentUserContext";
-import { useCurrentOrganizationContext } from "./Contexts/currentOrganizationContext";
-
-import React, { Component, useEffect } from "react";
+import React from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { PrivateRoute } from "./Components/Helpers/PrivateRoute";
-
 import LandingPage from "./Components/LandingPage";
-
 import Signup from "./Components/Signup";
 import Login from "./Components/Login";
 import ResetPassword from "./Components/ResetPassword";
 import ForgotPassword from "./Components/ForgotPassword";
-
 import OrgSelect from "./Components/OrgSelect";
-
 import Dashboard from "./Components/Dashboard";
 import Navigation from "./Components/Navigation";
-
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-
 import Boilerplates from "./Components/Boilerplates";
 import Categories from "./Components/Categories";
 import Organizations from "./Components/Organizations";
 import Grants from "./Components/Grants";
-// import Reports from './Components/Reports';
-
 import FundingOrgs from "./Components/FundingOrgs";
-// import Sections from './Components/Sections';
-// import ReportSections from './Components/ReportSections';
-
 import BoilerplatesShow from "./Components/BoilerplatesShow";
 import FundingOrgsShow from "./Components/FundingOrgsShow";
 import OrganizationsShow from "./Components/OrganizationsShow";
 import GrantsShow from "./Components/GrantsShow";
 import ReportsShow from "./Components/ReportsShow";
-// import OrganizationUser from './Components/OrganizationUsers'
-
 import GrantsFinalizeShow from "./Components/GrantsFinalizeShow";
 import ReportsFinalizeShow from "./Components/ReportsFinalizeShow";
-
-// import GrantsPrintableShow from './Components/GrantsPrintableShow';
-// import ReportsPrintableShow from './Components/ReportsPrintableShow';
-
 import BoilerplatesNew from "./Components/BoilerplatesNew";
 import CategoriesNew from "./Components/CategoriesNew";
 import FundingOrgsNew from "./Components/FundingOrgsNew";
@@ -53,20 +30,15 @@ import OrganizationsNew from "./Components/OrganizationsNew";
 import GrantsNew from "./Components/GrantsNew";
 import SectionsNew from "./Components/SectionsNew";
 import ReportsNew from "./Components/ReportsNew";
-// import ReportSectionsNew from './Components/ReportSectionsNew';
-
 import BoilerplatesEdit from "./Components/BoilerplatesEdit";
+import GrantEdit from "./Components/Grants/GrantEdit";
+import GrantCopy from "./Components/Grants/GrantCopy";
 
 export default function App() {
-  const { currentUserStore, currentUserDispatch } = useCurrentUserContext();
-  const { currentOrganizationStore, currentOrganizationDispatch } =
-    useCurrentOrganizationContext();
-
   return (
     <div className="App">
       <BrowserRouter>
         <Navigation />
-        {/* <Header /> */}
         <Switch>
           <Route exact path="/">
             <Redirect to="/landing_page" />
@@ -89,6 +61,14 @@ export default function App() {
             exact
             path={"/organizations/:org_id/grants/:grant_id"}
             component={GrantsShow}
+          />
+          <PrivateRoute
+            path={"/organizations/:org_id/grants/:grant_id/edit"}
+            component={GrantEdit}
+          />
+          <PrivateRoute
+            path={"/organizations/:org_id/grants/:grant_id/copy"}
+            component={GrantCopy}
           />
           <PrivateRoute
             exact

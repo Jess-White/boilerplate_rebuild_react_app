@@ -1,0 +1,24 @@
+.GrantEdit {
+  padding-top: 60px;
+  height: 100%;
+}
+
+.GrantEdit__Header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.GrantEdit__Header > h1 {
+  flex: 1;
+}
+
+.GrantEdit__Inputs {
+  margin-bottom: 50px;
+}
+
+.GrantEdit__Actions {
+  float: right;
+}
+.GrantEdit__Actions > button {
+  margin-left: 20px;
+}

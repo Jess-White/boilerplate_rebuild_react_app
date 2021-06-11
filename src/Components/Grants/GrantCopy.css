@@ -1,0 +1,19 @@
+.GrantCopy {
+  padding-top: 60px;
+  height: 100%;
+}
+
+.GrantCopy > h1 {
+  margin-bottom: 40px;
+}
+
+.GrantCopy__Inputs {
+  margin-bottom: 50px;
+}
+
+.GrantCopy__Actions {
+  float: right;
+}
+.GrantCopy__Actions > button {
+  margin-left: 20px;
+}

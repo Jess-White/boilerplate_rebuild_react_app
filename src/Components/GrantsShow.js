@@ -119,7 +119,7 @@ export default function GrantsShow(props) {
           console.log(error);
         });
     }
-  }, [currentOrganizationId, organizationClient]);
+  }, [currentOrganizationId, organizationClient, props.match.params.grant_id]);
 
   const handleSubmit = ({
     newTitle,
@@ -291,12 +291,7 @@ export default function GrantsShow(props) {
               <ol>
                 {sections.map((section) => (
                   <SortableElement key={section.id} id={section.id}>
-                    <SectionsShow
-                      section_id={section.id}
-                      grant_id={grant.id}
-                      boilerplates={boilerplates}
-                      updateSections={updateSections}
-                    />
+                    <SectionsShow section={section} />
                   </SortableElement>
                 ))}
               </ol>

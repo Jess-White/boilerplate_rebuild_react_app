@@ -13,9 +13,9 @@ export const getAllGrants = (organizationClient) => {
 
 // deleteGrant
 
-export const deleteGrant = (organizationClient) => {
+export const deleteGrant = (organizationClient, grantId) => {
   return organizationClient
-    .delete(`/grants/`)
+    .delete(`/grants/${grantId}`)
     .then((response) => response.data);
 };
 

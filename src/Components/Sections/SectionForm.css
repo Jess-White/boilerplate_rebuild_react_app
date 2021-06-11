@@ -1,0 +1,25 @@
+.SectionForm {
+  padding: 35px 20px;
+  border: 1px solid #c4c4c4;
+  border-radius: 6px;
+}
+
+.SectionForm__PasteBoilerplateContent {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.SectionForm__ContentEditor .ql-editor {
+  min-height: 180px;
+}
+
+.SectionForm__Actions {
+  display: flex;
+  align-items: center;
+}
+.SectionForm__Actions > a {
+  flex: 1;
+}
+.SectionForm__Actions > button {
+  margin-left: 20px;
+}

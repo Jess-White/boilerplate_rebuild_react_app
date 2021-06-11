@@ -1,9 +1,10 @@
-const countSectionWords = (string) => {
-  if (string) {
-    return string.split(" ").length;
-  } else {
-    return 0;
-  }
-};
+import countWords from "./countWords";
 
-export default countSectionWords;
+/**
+ * Returns the number of words a section has including it's title.
+ * @param {Section} section The section to count words for.
+ * @returns The total number of words.
+ */
+export default function countSectionWords(section) {
+  return countWords(section.title) + section.wordcount;
+}
