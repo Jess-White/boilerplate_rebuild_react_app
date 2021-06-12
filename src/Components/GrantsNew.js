@@ -3,9 +3,12 @@ import FundingOrgsNew from "./FundingOrgsNew";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Modal from "./Elements/Modal";
+import { Link } from "react-router-dom";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
 import { createGrant } from "../Services/Organizations/GrantsService";
 import { getAllFundingOrgs } from "../Services/Organizations/FundingOrgsService";
+import { useHistory } from "react-router-dom";
 
 export default function GrantsNew(props) {
   const [loading, setLoading] = useState(true);
@@ -18,8 +21,8 @@ export default function GrantsNew(props) {
   const [organizationId, setOrganizationId] = useState("");
   const [fundingOrgId, setFundingOrgId] = useState("");
   const [fundingOrgs, setFundingOrgs] = useState([]);
-  const [isHiddenFundingOrgsNew, setIsHiddenFundingOrgsNew] = useState("");
   const [errors, setErrors] = useState("");
+  const history = useHistory();
   const {
     currentOrganizationStore,
     currentOrganizationDispatch,
@@ -28,6 +31,12 @@ export default function GrantsNew(props) {
   const currentOrganizationId =
     currentOrganizationStore.currentOrganization &&
     currentOrganizationStore.currentOrganization.id;
+
+  const [showFundingOrgsNew, setShowFundingOrgsNew] = useState(false);
+  const handleClose = () => {
+    setShowFundingOrgsNew(false);
+  };
+  const handleShowFundingOrgsNew = () => setShowFundingOrgsNew(true);
 
   useEffect(() => {
     if (currentOrganizationId) {
@@ -40,10 +49,6 @@ export default function GrantsNew(props) {
     }
   }, [currentOrganizationId]);
 
-  const toggleHiddenFundingOrgsNew = () => {
-    setIsHiddenFundingOrgsNew(!isHiddenFundingOrgsNew);
-  };
-
   const clearForm = () => {
     setTitle("");
     setRfpUrl("");
@@ -51,6 +56,11 @@ export default function GrantsNew(props) {
     setPurpose("");
     setOrganizationId("");
     setFundingOrgId("");
+  };
+
+  const handleCancelGrantNew = (event) => {
+    event.preventDefault();
+    history.push(`/organizations/${currentOrganizationId}/grants`);
   };
 
   const updateFundingOrgs = (newFundingOrg) => {
@@ -87,17 +97,20 @@ export default function GrantsNew(props) {
 
   return (
     <Card>
-      {!isHiddenFundingOrgsNew ? (
+      <Link to={`/organizations/${currentOrganizationId}/grants/`}>
+        <p>Back to Grants</p>
+      </Link>
+      <Modal show={showFundingOrgsNew} onClose={handleClose}>
         <FundingOrgsNew
           funding_orgs={fundingOrgs}
           updateFundingOrgs={updateFundingOrgs}
-          toggleHiddenFundingOrgsNew={toggleHiddenFundingOrgsNew}
         />
-      ) : null}
+      </Modal>
+      <Card.Header>Add New Grant</Card.Header>
       <Card.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group>
-            <Form.Label>Select Funding Organization</Form.Label>
+            <Form.Label>Funding Organization</Form.Label>
             <Form.Control
               as="select"
               name="fundingOrgId"
@@ -106,7 +119,7 @@ export default function GrantsNew(props) {
               required
             >
               <option value="" disabled>
-                Select Funding Organization
+                Funding Organization
               </option>
               {fundingOrgs.map((fundingOrg) => {
                 return (
@@ -124,7 +137,7 @@ export default function GrantsNew(props) {
           <Button
             variant="secondary"
             size="sm"
-            onClick={toggleHiddenFundingOrgsNew}
+            onClick={handleShowFundingOrgsNew}
           >
             Add New Funding Organization
           </Button>
@@ -168,8 +181,26 @@ export default function GrantsNew(props) {
               required
             />
           </Form.Group>
-          <div className="text-center">
-            <Button type="submit">Add New Grant</Button>
+          <div>
+            <Button
+              type="submit"
+              style={{
+                maxWidth: "50%",
+                align: "center",
+              }}
+              onClick={handleSubmit}
+            >
+              Save Changes
+            </Button>
+            <Button
+              style={{
+                maxWidth: "50%",
+                align: "center",
+              }}
+              onClick={handleCancelGrantNew}
+            >
+              Cancel
+            </Button>
           </div>
         </Form>
       </Card.Body>

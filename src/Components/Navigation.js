@@ -11,10 +11,8 @@ import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationCo
 function Navigation(props) {
   // const [currentUserStore] = useCurrentUserContext();
   const { currentUserStore, currentUserDispatch } = useCurrentUserContext();
-  const {
-    currentOrganizationStore,
-    currentOrganizationDispatch,
-  } = useCurrentOrganizationContext();
+  const { currentOrganizationStore, currentOrganizationDispatch } =
+    useCurrentOrganizationContext();
 
   const history = useHistory();
 
@@ -26,9 +24,10 @@ function Navigation(props) {
   };
 
   const handleChange = (event) => {
-    const selectedOrgInfo = currentOrganizationStore.allUserOrganizations.filter(
-      (userOrganization) => event.target.value == userOrganization.id
-    );
+    const selectedOrgInfo =
+      currentOrganizationStore.allUserOrganizations.filter(
+        (userOrganization) => event.target.value == userOrganization.id
+      );
     localStorage.setItem("org_id", selectedOrgInfo[0].id);
     currentOrganizationDispatch({
       type: "SET_CURRENT_ORGANIZATION",

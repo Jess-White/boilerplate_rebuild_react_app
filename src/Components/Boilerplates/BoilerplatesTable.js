@@ -1,11 +1,9 @@
-import { format as formatDate, parseISO } from "date-fns";
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 import useBuildOrganizationsLink from "../../Hooks/useBuildOrganizationsLink";
-import './BoilerplatesTable.css'
-
-const renderDateColumn = (dateString) => formatDate(parseISO(dateString), 'PP');
+import "./BoilerplatesTable.css";
+import formatDate from "../../Helpers/formatDate";
 
 export default function BoilerplatesTable(props) {
   const columns = useMemo(
@@ -13,27 +11,26 @@ export default function BoilerplatesTable(props) {
       { Header: "Title", accessor: "title" },
       { Header: "Category", accessor: "category_name" },
       { Header: "Word Count", accessor: "wordcount" },
-      { Header: "Date Created", accessor: (row) => renderDateColumn(row.created_at) },
-      { Header: "Last Modified", accessor: (row) => renderDateColumn(row.updated_at) },
+      {
+        Header: "Date Created",
+        accessor: (row) => formatDate(row.created_at),
+      },
+      {
+        Header: "Last Modified",
+        accessor: (row) => formatDate(row.updated_at),
+      },
     ],
-    [],
+    []
   );
   const boilerplates = useMemo(() => props.boilerplates, [props.boilerplates]);
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable({ columns, data: boilerplates });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data: boilerplates });
   const buildOrganizationsLink = useBuildOrganizationsLink();
 
   const header = headerGroups.map((headerGroup) => (
     <tr {...headerGroup.getHeaderGroupProps()}>
       {headerGroup.headers.map((column) => (
-        <th {...column.getHeaderProps()}>
-          {column.render("Header")}
-        </th>
+        <th {...column.getHeaderProps()}>{column.render("Header")}</th>
       ))}
     </tr>
   ));
@@ -47,22 +44,18 @@ export default function BoilerplatesTable(props) {
       <tr {...row.getRowProps()}>
         {row.cells.map((cell) => {
           const renderedCell = (() => {
-            if (cell.column.Header === 'Title') {
+            if (cell.column.Header === "Title") {
               return <Link to={boilerplateLink}>{cell.render("Cell")}</Link>;
             } else if (
-              (cell.column.Header === 'Category' && markedOnCategory) ||
-              (cell.column.Header === 'Word Count' && markedOnMaxWordCount)
+              (cell.column.Header === "Category" && markedOnCategory) ||
+              (cell.column.Header === "Word Count" && markedOnMaxWordCount)
             ) {
               return <mark>{cell.render("Cell")}</mark>;
             }
             return cell.render("Cell");
           })();
 
-          return (
-            <td {...cell.getCellProps()}>
-              {renderedCell}
-            </td>
-          );
+          return <td {...cell.getCellProps()}>{renderedCell}</td>;
         })}
       </tr>
     );

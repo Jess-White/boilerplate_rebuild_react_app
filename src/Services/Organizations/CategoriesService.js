@@ -15,9 +15,9 @@ export const getAllCategories = (organizationClient) => {
 
 // deleteCategory
 
-export const deleteCategory = (organizationClient) => {
+export const deleteCategory = (organizationClient, categoryId) => {
   return organizationClient
-    .delete(`/categories/`)
+    .delete(`/categories/${categoryId}`)
     .then((response) => response.data);
 };
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import SectionsNew from "./SectionsNew";
 import ReportsNew from "./ReportsNew";
 import SectionsShow from "./SectionsShow";
@@ -120,7 +119,7 @@ export default function GrantsShow(props) {
           console.log(error);
         });
     }
-  }, [currentOrganizationId, organizationClient]);
+  }, [currentOrganizationId, organizationClient, props.match.params.grant_id]);
 
   const handleSubmit = ({
     newTitle,
@@ -248,6 +247,9 @@ export default function GrantsShow(props) {
 
   return (
     <div className="container">
+      <Link to={`/organizations/${currentOrganizationId}/grants/`}>
+        <p>Back to Grants</p>
+      </Link>
       <Card>
         {Header}
         <Card.Body>
@@ -260,8 +262,8 @@ export default function GrantsShow(props) {
           {/* beginning of grant update */}
           <div>
             <div>
-              <Modal onClose={handleClose} show={show}>
-                <Card style={{ backgroundColor: "#09191b", color: "#fefefe" }}>
+              <Modal className="modal-popup" onClose={handleClose} show={show}>
+                <Card>
                   <Card.Body>
                     <GrantEditForm
                       grant={grant}
@@ -289,12 +291,7 @@ export default function GrantsShow(props) {
               <ol>
                 {sections.map((section) => (
                   <SortableElement key={section.id} id={section.id}>
-                    <SectionsShow
-                      section_id={section.id}
-                      grant_id={grant.id}
-                      boilerplates={boilerplates}
-                      updateSections={updateSections}
-                    />
+                    <SectionsShow section={section} />
                   </SortableElement>
                 ))}
               </ol>

@@ -4,9 +4,6 @@ import Button from "react-bootstrap/Button";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-// import axios from "axios";
-// import { useHistory } from "react-router-dom";
-// import { useCurrentOrganizationContext } from "../../Contexts/currentOrganizationContext";
 import countWords from "../../Helpers/countWords";
 
 const modules = {

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import GrantsNew from "./GrantsNew";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
 import Moment from "react-moment";
 import Form from "react-bootstrap/Form";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
@@ -350,8 +349,9 @@ export default function Grants() {
   return (
     <div className="component container">
       <h1>Grants</h1>
-      <h3>Add A Grant</h3>
-      <GrantsNew updateGrants={updateGrants} />
+      <Link to={`/organizations/${currentOrganizationId}/grants-new`}>
+        <Button>Add A Grant</Button>
+      </Link>
       <div>
         <Form>
           <Form.Group>

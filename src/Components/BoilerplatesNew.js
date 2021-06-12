@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import Modal from "./Elements/Modal";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import ReactQuill from "react-quill";
@@ -31,6 +32,12 @@ export default function BoilerplatesNew(props) {
   const currentOrganizationId =
     currentOrganizationStore.currentOrganization &&
     currentOrganizationStore.currentOrganization.id;
+  const [showCategoriesNew, setShowCategoriesNew] = useState(false);
+  const handleClose = () => {
+    setShowCategoriesNew(false);
+  };
+
+  const handleShowCategoriesNew = () => setShowCategoriesNew(true);
 
   useEffect(() => {
     if (currentOrganizationId) {
@@ -64,7 +71,6 @@ export default function BoilerplatesNew(props) {
   };
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSubmit = (event) => {
@@ -128,10 +134,15 @@ export default function BoilerplatesNew(props) {
 
   return (
     <div className="container">
-      {/* <CategoriesNew
-        categories={categories}
-        updateCategories={updateCategories}
-      /> */}
+      <Modal show={showCategoriesNew} onClose={handleClose}>
+        <CategoriesNew
+          categories={categories}
+          updateCategories={updateCategories}
+        />
+      </Modal>
+      <Link to={`/organizations/${currentOrganizationId}/boilerplates/`}>
+        <p>Back to Boilerplates</p>
+      </Link>
       <Card>
         <Card.Header>
           <h4>Add New Boilerplate</h4>
@@ -172,7 +183,11 @@ export default function BoilerplatesNew(props) {
                   );
                 })}
               </Form.Control>
-              <Button variant="primary" size="sm">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleShowCategoriesNew}
+              >
                 Add New Category
               </Button>
               <Form.Label>Boilerplate Text</Form.Label>
@@ -196,7 +211,7 @@ export default function BoilerplatesNew(props) {
                 }}
                 onClick={handleSubmit}
               >
-                Save Changes
+                Save
               </Button>
               <Button
                 style={{

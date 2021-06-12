@@ -22,11 +22,8 @@ export default function OrganizationsNew(props) {
         headers: { Authorization: `Bearer ${localStorage.token}` },
       })
       .then((response) => {
-        if (response.data) {
-          props.toggleHiddenOrganizationsNew();
-          props.updateOrganizations(response.data);
-          clearForm();
-        }
+        props.onSubmit(response.data);
+        clearForm();
       })
       .catch((error) => {
         console.log("organization creation error", error);
@@ -36,12 +33,12 @@ export default function OrganizationsNew(props) {
   return (
     <Card>
       <Card.Header>
-        <h3>Add An Organization</h3>
+        <h3>Add Organization</h3>
       </Card.Header>
       <Card.Body>
         <Form onSubmit={handleSubmit}>
           <Form.Group>
-            <Form.Label>New Organization Name</Form.Label>
+            <Form.Label>Organization Name</Form.Label>
             <Form.Control
               type="text"
               name="name"
@@ -50,9 +47,8 @@ export default function OrganizationsNew(props) {
               required
             />
           </Form.Group>
-          <div className="text-center">
-            <Button type="submit">Add New Organization</Button>
-          </div>
+          <Button variant="outline-dark" onClick={props.onCancel}>Cancel</Button>
+          <Button variant="dark" type="submit">Add New Organization</Button>
         </Form>
       </Card.Body>
     </Card>

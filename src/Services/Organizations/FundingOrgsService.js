@@ -15,9 +15,9 @@ export const getAllFundingOrgs = (organizationClient) => {
 
 // deleteFundingOrg
 
-export const deleteFundingOrg = (organizationClient) => {
+export const deleteFundingOrg = (organizationClient, fundingOrgId) => {
   return organizationClient
-    .delete(`/funding_orgs/`)
+    .delete(`/funding_orgs/${fundingOrgId}`)
     .then((response) => response.data);
 };
 
