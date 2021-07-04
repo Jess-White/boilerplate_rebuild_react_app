@@ -46,10 +46,8 @@ export default function GrantsFinalizeShow(props) {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
   const [newSectionIndex, setNewSectionIndex] = useState(null);
-  const {
-    currentOrganizationStore,
-    organizationClient,
-  } = useCurrentOrganizationContext();
+  const { currentOrganizationStore, organizationClient } =
+    useCurrentOrganizationContext();
   const totalWordCount = countTotalSectionsWords(grant?.sections);
   const currentOrganizationId =
     currentOrganizationStore.currentOrganization?.id;
@@ -65,9 +63,8 @@ export default function GrantsFinalizeShow(props) {
 
   const [showGrantEditModal, setShowGrantEditModal] = useState(false);
   const [showGrantCopyModal, setShowGrantCopyModal] = useState(false);
-  const [sectionToSaveAsBoilerplate, setSectionToSaveAsBoilerplate] = useState(
-    null
-  );
+  const [sectionToSaveAsBoilerplate, setSectionToSaveAsBoilerplate] =
+    useState(null);
   const handleShowGrantEditModal = (event) => setShowGrantEditModal(true);
   const handleCloseGrantEditModal = (event) => setShowGrantEditModal(false);
   const handleShowGrantCopyModal = (event) => setShowGrantCopyModal(true);
@@ -82,6 +79,36 @@ export default function GrantsFinalizeShow(props) {
       .catch((error) => setErrors([error]))
       .finally(() => setLoading(false));
   }, [organizationClient, grantId]);
+
+  const addZipped = useCallback(() => {
+    if (!grant) {
+      return;
+    }
+    // setGrant((grant) => {
+    //   const zipSections = grant.sections.map((section) => {
+    //     section["zipped"] = true;
+    //   });
+    //   return { ...grant, sections: zipSections };
+    // });
+    const zipGrant = grant.sections.map((section) => {
+      section["zipped"] = true;
+      return section;
+    });
+    setGrant(zipGrant);
+  }, [grant]);
+
+  const zipSection = (sectionId) => {
+    if (!grant) {
+      return;
+    }
+    const newGrant = grant.sections.map((section) => {
+      if (section.id === sectionId) {
+        section.zipped = !section.zipped;
+      }
+      return section;
+    });
+    setGrant(newGrant);
+  };
 
   const handleSubmitSectionForm = ({ newSectionFields, precedingSection }) => {
     createGrantSection(organizationClient, grantId, {
@@ -134,7 +161,8 @@ export default function GrantsFinalizeShow(props) {
 
   useEffect(() => {
     getGrant();
-  }, [getGrant]);
+    addZipped();
+  }, [getGrant, addZipped]);
 
   if (errors.length) {
     console.error(errors);
@@ -217,6 +245,7 @@ export default function GrantsFinalizeShow(props) {
                 <SortableElement key={section.id} id={section.id}>
                   <SectionsShow
                     section={section}
+                    zipSection={zipSection}
                     onSaveSectionAsBoilerplate={setSectionToSaveAsBoilerplate}
                   />
                   {newSectionIndex === section.id && (
