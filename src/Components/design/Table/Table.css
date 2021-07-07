@@ -1,0 +1,23 @@
+.table__header {
+  text-align: left;
+  color: var(--contrast-70);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+}
+
+.table__header:first-child,
+.table__header:last-child,
+.table__cell:first-child,
+.table__cell:last-child {
+  padding: 0;
+}
+
+.table__header,
+.table__cell {
+  padding: 0 1rem;
+}
+
+.table__header--number,
+.table__cell--number {
+  text-align: right;
+}

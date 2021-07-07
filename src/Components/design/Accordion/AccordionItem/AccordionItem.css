@@ -6,7 +6,7 @@
   margin: 0;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
-  color: var(--secondary-text-light);
+  color: var(--contrast-70);
 }
 
 .accordion-item__heading > button {
