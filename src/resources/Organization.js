@@ -5,3 +5,8 @@ export default class Organization extends AuthenticatedResource {
 
   static urlRoot = "/api/organizations";
 }
+
+Organization.list();
+// "/organizations/"
+Organization.url({ id: 5 });
+// "/organizations/5/"

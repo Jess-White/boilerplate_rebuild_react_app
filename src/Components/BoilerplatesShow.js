@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useFetcher, useResource } from "rest-hooks";
 import Card from "react-bootstrap/Card";
 import Modal from "./Elements/Modal";
+import { Boilerplate } from "../resources";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
@@ -11,6 +13,7 @@ import {
   deleteBoilerplate,
 } from "../Services/Organizations/BoilerplatesService";
 import countWords from "../Helpers/countWords";
+import unique from "../Helpers/unique";
 import { getAllCategories } from "../Services/Organizations/CategoriesService";
 
 //fontawesome
@@ -39,6 +42,15 @@ export default function BoilerplatesShow(props) {
   const currentOrganizationId =
     currentOrganizationStore.currentOrganization &&
     currentOrganizationStore.currentOrganization.id;
+
+  // const boilerplate = useResource(
+  //   Boilerplate.url({ id: props.match.params.boilerplate_id }),
+  //   {}
+  // );
+
+  // const categories = unique(
+  //   boilerplate.map((boilerplate) => boilerplate.category_name).sort()
+  // );
 
   const [newTitle, setNewTitle] = useState("");
   const [newQuillText, setNewQuillText] = useState("");
@@ -70,7 +82,11 @@ export default function BoilerplatesShow(props) {
         })
         .catch((error) => console.log(error));
     }
-  }, [currentOrganizationId]);
+  }, [
+    currentOrganizationId,
+    organizationClient,
+    props.match.params.boilerplate_id,
+  ]);
 
   const handleSubmit = ({ newTitle, newQuillText, newCategoryId }) => {
     updateBoilerplate(organizationClient, boilerplate.id, {
@@ -90,6 +106,7 @@ export default function BoilerplatesShow(props) {
       .catch((error) => {
         console.log("boilerplate update error", error);
       });
+    console.log("yo");
   };
 
   const handleCancel = (event) => {

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { Boilerplate } from "../resources";
 import { Link } from "react-router-dom";
+import { useFetcher, useResource } from "rest-hooks";
 import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationContext";
-import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
+// import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
 import BoilerplatesTable from "./Boilerplates/BoilerplatesTable";
 import unique from "../Helpers/unique";
 
 const NO_SELECTED_CATEGORY = "none";
 
 export default function Boilerplates(props) {
-  const [loading, setLoading] = useState(true);
-  const [boilerplates, setBoilerplates] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [boilerplates, setBoilerplates] = useState([]);
   const [selectedCategory, setSelectedCategory] =
     useState(NO_SELECTED_CATEGORY);
   const [selectedMaxWordCount, setSelectedMaxWordCount] = useState("");
@@ -19,7 +21,7 @@ export default function Boilerplates(props) {
     useCurrentOrganizationContext();
   const currentOrganizationId =
     currentOrganizationStore.currentOrganization?.id;
-
+  const boilerplates = useResource(Boilerplate.list(), {});
   const handleChangeSelectedCategory = (event) =>
     setSelectedCategory(event.target.value);
   const handleChangeSelectedMaxWordCount = (event) =>
@@ -36,23 +38,23 @@ export default function Boilerplates(props) {
     return { ...boilerplate, markedOnCategory, markedOnMaxWordCount };
   });
 
-  useEffect(() => {
-    if (currentOrganizationId) {
-      getAllBoilerplates(organizationClient)
-        .then((boilerplates) => {
-          setBoilerplates(boilerplates);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          setLoading(false);
-        });
-    }
-  }, [organizationClient, currentOrganizationId]);
+  // useEffect(() => {
+  //   if (currentOrganizationId) {
+  //     getAllBoilerplates(organizationClient)
+  //       .then((boilerplates) => {
+  //         setBoilerplates(boilerplates);
+  //         setLoading(false);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //         setLoading(false);
+  //       });
+  //   }
+  // }, [organizationClient, currentOrganizationId]);
 
-  if (loading) {
-    return <h1 className="container">Loading....</h1>;
-  }
+  // if (loading) {
+  //   return <h1 className="container">Loading....</h1>;
+  // }
 
   const categories = unique(
     boilerplates.map((boilerplate) => boilerplate.category_name).sort()
