@@ -8,6 +8,7 @@ import Organization from "./Organization";
 
 export default class Boilerplate extends AuthenticatedResource {
   id = "";
+
   pk() {
     return this.id;
   }

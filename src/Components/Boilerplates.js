@@ -8,6 +8,7 @@ import { useCurrentOrganizationContext } from "../Contexts/currentOrganizationCo
 // import { getAllBoilerplates } from "../Services/Organizations/BoilerplatesService";
 import BoilerplatesTable from "./Boilerplates/BoilerplatesTable";
 import unique from "../Helpers/unique";
+import { Organization } from "../resources";
 
 const NO_SELECTED_CATEGORY = "none";
 
